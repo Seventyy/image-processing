@@ -26,13 +26,17 @@ def finalise_image():
 def handle_command():
     global pixels, image
     command_name = sys.argv[1]
-    argument = int(sys.argv[2])
+    
     match command_name:
         case "--help":
             print("here be help!")
             exit
         case "--brightness":
-            brightness(pixels, argument)        
+            brightness(pixels, int(sys.argv[2]))
+        case "--negative":
+            negative(pixels)
+        case "--contrast":
+            contrast(pixels, float(sys.argv[2]))
 
 initalise_image()
 handle_command()
