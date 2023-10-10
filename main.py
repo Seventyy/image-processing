@@ -1,7 +1,7 @@
 import sys
 from PIL import Image
 import numpy as np
- 
+
 image = Image.open("imgs/mandril.bmp")
 
 pixels = np.array(image.getdata())
@@ -32,7 +32,9 @@ def handle_command():
 
 def brightness(value):
     global pixels, image
-    pixels += value
+    for x in range(pixels.shape[0]):
+        for y in range(pixels.shape[1]):
+            pixels[x, y] = min(max(pixels[x, y] + value, 0), 255)
 
 initalise_image()
 handle_command()
