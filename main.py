@@ -1,12 +1,17 @@
 import sys
 from PIL import Image
 import numpy as np
+import argparse
 
 # modules
 sys.path.insert(0, f'./src')
 from elementary import *
+from parsing import *
+from io import *
 
-image = Image.open("imgs/mandril.bmp")
+args = parse_cli()
+
+image = Image.open(args.input)
 
 pixels = np.array(image.getdata())
 
@@ -32,11 +37,11 @@ def handle_command():
             print("here be help!")
             exit
         case "--brightness":
-            brightness(pixels, int(sys.argv[2]))
+            brightness(pixels, int(args.value))
         case "--negative":
             negative(pixels)
         case "--contrast":
-            contrast(pixels, float(sys.argv[2]))
+            contrast(pixels, float(args.value))
 
 initalise_image()
 handle_command()
