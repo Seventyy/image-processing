@@ -3,33 +3,12 @@ from PIL import Image
 import numpy as np
 import argparse
 
-# modules
 sys.path.insert(0, f'./src')
 from elementary import *
-from parsing import *
-from io import *
-
-args = parse_cli()
-
-image = Image.open(args.input)
-
-pixels = np.array(image.getdata())
-
-def initalise_image():
-    global pixels, image
-    if pixels.ndim == 1:
-        numColorChannels = 1
-        pixels = pixels.reshape(image.size[1], image.size[0])
-    else:
-        numColorChannels = pixels.shape[1]
-        pixels = pixels.reshape(image.size[1], image.size[0], numColorChannels)
-
-def finalise_image():
-    global pixels, image
-    Image.fromarray(pixels.astype(np.uint8)).save("output.bmp")
+from cli import *
+from img_io import *
 
 def handle_command():
-    global pixels, image
     command_name = sys.argv[1]
     
     match command_name:
@@ -43,34 +22,16 @@ def handle_command():
         case "--contrast":
             contrast(pixels, float(args.value))
 
-initalise_image()
-handle_command()
-finalise_image()
+def main():
+    global image, pixels, args
 
+    args = parse_cli()
+    image = Image.open(args.input)
+    pixels = np.array(image)
 
+    init_img(pixels, image)
+    handle_command()
+    init_img(pixels, image)
 
-
-
-
-
-
-# from PIL import Image
-# import numpy as np
-
-# image = Image.open("imgs/mandril.bmp")
-
-# pixels = np.array(image.getdata())
-
-# def initalise_images():
-#     if pixels.ndim == 1: #grayscale
-#         numColorChannels = 1
-#         pixels = pixels.reshape(image.size[1], image.size[0])
-#     else:
-#         numColorChannels = pixels.shape[1]
-#         pixels = pixels.reshape(image.size[1], image.size[0], numColorChannels)
-
-# pixels = pixels / 2 # Example processing (decrease brightness)
-
-# newIm = Image.fromarray(pixels.astype(np.uint8))
-
-# newIm.save("output.bmp")
+if __name__ == "__main__":
+    main()
