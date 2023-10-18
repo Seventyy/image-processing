@@ -9,18 +9,14 @@ from cli import *
 from img_io import *
 
 def handle_command():
-    command_name = sys.argv[1]
-    
-    match command_name:
-        case "--help":
-            print("here be help!")
-            exit
-        case "--brightness":
-            brightness(pixels, int(args.value))
-        case "--negative":
-            negative(pixels)
-        case "--contrast":
-            contrast(pixels, float(args.value))
+    if args.brightness:
+        brightness(pixels, int(args.value))
+
+    if args.negative:
+        negative(pixels)
+
+    if args.contrast:
+        contrast(pixels, float(args.value))
 
 def main():
     global image, pixels, args
