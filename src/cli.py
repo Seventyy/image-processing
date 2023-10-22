@@ -25,5 +25,25 @@ def parse_cli():
         help='Modifies contrast by a float value in -v. Value of 1 will not change anything',
         action='store_true')
 
+    command_group.add_argument('--hflip',
+        help='no help',
+        action='store_true')
+
+    command_group.add_argument('--vflip',
+        help='no help',
+        action='store_true')
+
+    command_group.add_argument('--dflip',
+        help='no help',
+        action='store_true')
+
+    command_group.add_argument('--shrink',
+        help='no help',
+        action='store_true')
+
+    command_group.add_argument('--enlarge',
+        help='no help',
+        action='store_true')
+
 
     return parser.parse_args()
