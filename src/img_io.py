@@ -9,5 +9,5 @@ def init_img(pixels, image):
         numColorChannels = pixels.shape[1]
         pixels = pixels.reshape(image.size[1], image.size[0], numColorChannels)
 
-def init_img(pixels, image):
+def finish_img(pixels, image):
     Image.fromarray(pixels.astype(np.uint8)).save("output.bmp")

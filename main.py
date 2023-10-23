@@ -43,11 +43,11 @@ def main():
     image = Image.open(args.input)
     pixels = np.array(image)
     
-    init_img(pixels, image)
+    # init_img(pixels, image)
 
     handle_command()
 
-    init_img(pixels, image)
+    finish_img(pixels, image)
 
 if __name__ == "__main__":
     main()
