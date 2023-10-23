@@ -18,7 +18,7 @@ def parse_cli():
         action='store_true')
 
     command_group.add_argument('--negative',
-        help='Inverts colors of the image. Ignores -v',
+        help='Inverts colors of the image',
         action='store_true')
 
     command_group.add_argument('--contrast',
@@ -26,24 +26,23 @@ def parse_cli():
         action='store_true')
 
     command_group.add_argument('--hflip',
-        help='no help',
+        help='Flips the image horizontally',
         action='store_true')
 
     command_group.add_argument('--vflip',
-        help='no help',
+        help='Flips the image vertically',
         action='store_true')
 
     command_group.add_argument('--dflip',
-        help='no help',
+        help='Flips the image diagonally',
         action='store_true')
 
     command_group.add_argument('--shrink',
-        help='no help',
+        help='Makes the image two times smaller',
         action='store_true')
 
     command_group.add_argument('--enlarge',
-        help='no help',
+        help='Makes the image two times larger',
         action='store_true')
-
 
     return parser.parse_args()
