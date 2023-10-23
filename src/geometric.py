@@ -5,18 +5,21 @@ def hflip(img):
     for y in range(img.shape[1]):
         for x in range(img.shape[0]):
             img[x, y] = img_copy[img.shape[0] - x - 1, y]
+    return img
 
 def vflip(img):
     img_copy = img.copy()
     for y in range(img.shape[1]):
         for x in range(img.shape[0]):
             img[x, y] = img_copy[x, img.shape[0] - y - 1]
+    return img
 
 def dflip(img):
     img_copy = img.copy()
     for y in range(img.shape[1]):
         for x in range(img.shape[0]):
             img[x, y] = img_copy[img.shape[0] - x - 1, img.shape[0] - y - 1]
+    return img
 
 def __resize__(img, mul):
     nsize = (int(img.shape[0] * mul), int(img.shape[1] * mul))

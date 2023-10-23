@@ -9,32 +9,30 @@ from img_io import *
 from elementary import *
 from geometric import *
 
-def handle_command():
-    global pixels
-
+def handle_command(channel):
     if args.brightness:
-        brightness(pixels, int(args.value))
+        return brightness(channel, int(args.value))
 
     if args.negative:
-        negative(pixels)
+        return negative(channel)
 
     if args.contrast:
-        contrast(pixels, float(args.value))
+        return contrast(channel, float(args.value))
     
     if args.hflip:
-        hflip(pixels)
+        return hflip(channel)
 
     if args.vflip:
-        vflip(pixels)
+        return vflip(channel)
 
     if args.dflip:
-        dflip(pixels)
+        return dflip(channel)
 
     if args.shrink:
-        pixels = shrink(pixels)
+        return shrink(channel)
 
     if args.enlarge:
-        pixels = enlarge(pixels)
+        return enlarge(channel)
 
 def main():
     global image, pixels, args
@@ -45,7 +43,13 @@ def main():
     
     # init_img(pixels, image)
 
-    handle_command()
+    if len(pixels.shape) == 3:
+        pixels = np.dstack((
+            handle_command(pixels[:,:,0]),
+            handle_command(pixels[:,:,1]),
+            handle_command(pixels[:,:,2])))
+    else:
+        pixels = handle_command(pixels)
 
     finish_img(pixels, image)
 
