@@ -10,6 +10,8 @@ from elementary import *
 from geometric import *
 
 def handle_command():
+    global pixels
+
     if args.brightness:
         brightness(pixels, int(args.value))
 
@@ -29,11 +31,10 @@ def handle_command():
         dflip(pixels)
 
     if args.shrink:
-        shrink(pixels)
+        pixels = shrink(pixels)
 
     if args.enlarge:
-        enlarge(pixels)
-
+        pixels = enlarge(pixels)
 
 def main():
     global image, pixels, args
@@ -43,11 +44,9 @@ def main():
     pixels = np.array(image)
     
     init_img(pixels, image)
-    
-    # pixels = pixels.T
+
     handle_command()
-    # pixels = pixels.T
-    
+
     init_img(pixels, image)
 
 if __name__ == "__main__":
