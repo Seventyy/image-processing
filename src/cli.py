@@ -44,5 +44,41 @@ def parse_cli():
     command_group.add_argument('--enlarge',
         help='Makes the image two times larger',
         action='store_true')
+    
+    command_group.add_argument('--amean',
+        help='Performs an arithmetic mean filter with window size 2*v+1',
+        action='store_true')
+    
+    command_group.add_argument('--adaptive',
+        help='Performs an adaptive median filter with window size 2*v+1',
+        action='store_true')
+    
+    command_group.add_argument('--mse',
+        help='Performs mean square error analisys',
+        action='store_true')
+
+    command_group.add_argument('--pmse',
+        help='Performs peak mean square error analisys',
+        action='store_true')
+
+    command_group.add_argument('--snr',
+        help='Performs signal to noise ratio analisys',
+        action='store_true')
+
+    command_group.add_argument('--psnr',
+        help='Performs peak signal to noise ratio analisys',
+        action='store_true')
+
+    command_group.add_argument('--md',
+        help='Performs maximum difference analisys',
+        action='store_true')
+
+
+
+    
+    
+    
+    
+    
 
     return parser.parse_args()

@@ -8,6 +8,8 @@ from cli import *
 from img_io import *
 from elementary import *
 from geometric import *
+from noise_removal import *
+from analysis import *
 
 def handle_command(channel):
     if args.brightness:
@@ -33,6 +35,27 @@ def handle_command(channel):
 
     if args.enlarge:
         return enlarge(channel)
+    
+    if args.amean:
+        return amean(channel, int(args.value))
+    
+    if args.adaptive:
+        return adaptive(channel, int(args.value))
+    
+    if args.mse:
+        return mse(channel)
+    
+    if args.pmse:
+        return pmse(channel)
+    
+    if args.snr:
+        return snr(channel)
+    
+    if args.psnr:
+        return psnr(channel)
+    
+    if args.md:
+        return md(channel)
 
 def main():
     global image, pixels, args
