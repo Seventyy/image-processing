@@ -56,6 +56,9 @@ def handle_command(channel):
     
     if args.md:
         return md(channel)
+    
+    if args.raport:
+        generate_raport(channel, int(args.value))
 
 def main():
     global image, pixels, args
@@ -78,3 +81,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+def generate_raport():
+    print(
+        "Original image to image with noise:",
+        
+    )

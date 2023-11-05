@@ -54,11 +54,11 @@ def parse_cli():
     # NOISE REMOVAL
 
     command_group.add_argument('--amean',
-        help='Performs an arithmetic mean filter with window size 2*v+1. Takes -k',
+        help='Performs an arithmetic mean filter with window size 2*(-v)+1. Takes -k',
         action='store_true')
     
     command_group.add_argument('--adaptive',
-        help='Performs an adaptive median filter with window size 2*v+1. Takes -k\n\n',
+        help='Performs an adaptive median filter with window size 2*(-v)+1. Takes -k\n\n',
         action='store_true')
     
     # ANALYSIS
@@ -81,6 +81,10 @@ def parse_cli():
 
     command_group.add_argument('--md',
         help='Performs maximum difference analysis',
+        action='store_true')
+    
+    command_group.add_argument('--raport',
+        help='Created data for rapor -v',
         action='store_true')
     
     args = parser.parse_args()
