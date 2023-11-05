@@ -18,9 +18,7 @@ def adaptive(img, n):
     z_max = 0
     z_med = 0
     z_xy = 0
-    s_max = 3 # extents
-    
-    s = 1
+    s_max = n # extents
     
     for y in range(s_max, img.shape[1] - s_max):
         for x in range(s_max, img.shape[0] - s_max):
