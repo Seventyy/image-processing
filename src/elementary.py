@@ -1,5 +1,3 @@
-import numpy as np
-
 def brightness(img, value: int):
     lookup = []
     for n in range(256):
