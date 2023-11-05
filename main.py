@@ -37,10 +37,10 @@ def handle_command(channel):
         return enlarge(channel)
     
     if args.amean:
-        return amean(channel, int(args.value))
+        return amean(channel, int(args.kernel))
     
     if args.adaptive:
-        return adaptive(channel, int(args.value))
+        return adaptive(channel, int(args.kernel))
     
     if args.mse:
         return mse(channel)
