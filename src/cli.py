@@ -97,8 +97,8 @@ def parse_cli():
     if not args.value and (args.brightness or args.contrast):
         parser.error('-v/--value argument is required for current command!')
 
-    if not is_command_analysis(args) and args.compare:
-        print('Ignoring -c/--compare argument')
+    if is_command_analysis(args) and not args.compare:
+        parser.error('-c/--compare argument is required for current command!')
     
     if args.value and not (args.brightness or args.contrast):
         print('Ignoring -v/--value argument')

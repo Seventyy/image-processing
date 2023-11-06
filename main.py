@@ -101,11 +101,8 @@ def main():
     # ANALYSIS
 
     if is_command_analysis(args):
-        if args.compare:
-            compare_img = Image.open(args.compare)
-            handle_analysis(pixels_old, np.array(compare_img))
-        else:
-            handle_analysis(pixels_old, pixels_new)
+        compare_img = Image.open(args.compare)
+        handle_analysis(pixels_old, np.array(compare_img))
         return
 
     # PROCESSING
@@ -120,7 +117,7 @@ def main():
     
     # FINALIZATION
 
-    Image.fromarray(pixels.astype(np.uint8)).save(args.output)
+    Image.fromarray(pixels_new.astype(np.uint8)).save(args.output)
 
 if __name__ == "__main__":
     main()
