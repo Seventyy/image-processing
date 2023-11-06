@@ -1,14 +1,19 @@
 import argparse
 
+def is_command_analysis(args):
+    return args.mse or args.pmse or args.snr or args.psnr or args.md or args.report
+
 def parse_cli():
     parser = argparse.ArgumentParser(
         prog='imgproc',
         description='A lightweight image processing utility made in python.',
-        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-v VALUE] [-k KERNEL SIZE]',
+        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE]',
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('-i', '--input', help='Path to the image source', required=True)
     parser.add_argument('-o', '--output', default='output.bmp', help='Path to the image output')
+    parser.add_argument('-c', '--compare', help='Path to the second image that the input will be compared to. Required by analysis methods. If unused, analysis will be performed on output')
+    
     parser.add_argument('-v', '--value', help='Numerical value required by some commands')
     parser.add_argument('-k', '--kernel', default='1', help='Size of the kernel required by some commmands')
 
@@ -83,13 +88,19 @@ def parse_cli():
         help='Performs maximum difference analysis',
         action='store_true')
     
-    command_group.add_argument('--raport',
-        help='Created data for rapor -v',
+    command_group.add_argument('--report',
+        help='Performs all analysis methods',
         action='store_true')
     
     args = parser.parse_args()
 
     if not args.value and (args.brightness or args.contrast):
-        parser.error('-v argument is required for current command!')
+        parser.error('-v/--value argument is required for current command!')
+
+    if not is_command_analysis(args) and args.compare:
+        print('Ignoring -c/--compare argument')
+    
+    if args.value and not (args.brightness or args.contrast):
+        print('Ignoring -v/--value argument')
 
     return args

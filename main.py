@@ -11,7 +11,7 @@ from geometric import *
 from noise_removal import *
 from analysis import *
 
-def handle_command(channel):
+def handle_operation(channel):
     if args.brightness:
         return brightness(channel, int(args.value))
 
@@ -42,48 +42,85 @@ def handle_command(channel):
     if args.adaptive:
         return adaptive(channel, int(args.kernel))
     
+    return False
+
+def handle_analysis(org_img, new_img):
+    if args.report:
+        args.mse = True
+        args.pmse = True
+        args.snr = True
+        args.psnr = True
+        args.md = True
+
+    if len(org_img.shape) == 3:
+        channels_old = [org_img[:,:,0], org_img[:,:,1], org_img[:,:,2]]
+        channels_new = [new_img[:,:,0], new_img[:,:,1], new_img[:,:,2]]
+    else:
+        channels_old = [org_img]
+        channels_new = [new_img]
+
     if args.mse:
-        return mse(channel)
-    
+        mes = "MSE:"
+        for ch in range(len(channels_old)):
+            mes += " " + str(mse(channels_old[ch], channels_new[ch]))
+        print(mes)
+
     if args.pmse:
-        return pmse(channel)
-    
+        mes = "PMSE:"
+        for ch in range(len(channels_old)):
+            mes += " " + str(pmse(channels_old[ch], channels_new[ch]))
+        print(mes)
+        
     if args.snr:
-        return snr(channel)
+        mes = "SNR:"
+        for ch in range(len(channels_old)):
+            mes += " " + str(snr(channels_old[ch], channels_new[ch]))
+        print(mes)
     
     if args.psnr:
-        return psnr(channel)
-    
+        mes = "PSNR:"
+        for ch in range(len(channels_old)):
+            mes += " " + str(psnr(channels_old[ch], channels_new[ch]))
+        print(mes)
+
     if args.md:
-        return md(channel)
-    
-    if args.raport:
-        generate_raport(channel, int(args.value))
+        mes = "MD:"
+        for ch in range(len(channels_old)):
+            mes += " " + str(md(channels_old[ch], channels_new[ch]))
+        print(mes)
 
 def main():
-    global image, pixels, args
+    global args
+
+    # INITIALIZATION
 
     args = parse_cli()
     image = Image.open(args.input)
-    pixels = np.array(image)
+    pixels_old = np.array(image)
+    pixels_new = pixels_old.copy()
+
+    # ANALYSIS
+
+    if is_command_analysis(args):
+        if args.compare:
+            compare_img = Image.open(args.compare)
+            handle_analysis(pixels_old, np.array(compare_img))
+        else:
+            handle_analysis(pixels_old, pixels_new)
+        return
+
+    # PROCESSING
     
-    # init_img(pixels, image)
-
-    if len(pixels.shape) == 3:
-        pixels = np.dstack((
-            handle_command(pixels[:,:,0]),
-            handle_command(pixels[:,:,1]),
-            handle_command(pixels[:,:,2])))
+    if len(pixels_new.shape) == 3:
+        pixels_new = np.dstack((
+            handle_operation(pixels_new[:,:,0]),
+            handle_operation(pixels_new[:,:,1]),
+            handle_operation(pixels_new[:,:,2])))
     else:
-        pixels = handle_command(pixels)
-
-    finish_img(pixels, image)
+        pixels_new = handle_operation(pixels_new)
+    
+    # FINALIZATION
+    finish_img(pixels_new, image)
 
 if __name__ == "__main__":
     main()
-    
-def generate_raport():
-    print(
-        "Original image to image with noise:",
-        
-    )
