@@ -52,6 +52,10 @@ def handle_analysis(org_img, new_img):
         args.psnr = True
         args.md = True
 
+    if len(org_img.shape) != len(new_img.shape):
+        print('error: Cannot compare monochrome and colored pictures!')
+        exit()
+
     if len(org_img.shape) == 3:
         channels_old = [org_img[:,:,0], org_img[:,:,1], org_img[:,:,2]]
         channels_new = [new_img[:,:,0], new_img[:,:,1], new_img[:,:,2]]
