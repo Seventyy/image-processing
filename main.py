@@ -2,6 +2,7 @@ import sys
 from PIL import Image
 import numpy as np
 import argparse
+from decimal import Decimal
 
 sys.path.insert(0, f'./src')
 from cli import *
@@ -61,31 +62,31 @@ def handle_analysis(org_img, new_img):
     if args.mse:
         mes = "MSE:"
         for ch in range(len(channels_old)):
-            mes += " " + str(mse(channels_old[ch], channels_new[ch]))
+            mes += " " + '%.2E' % Decimal(mse(channels_old[ch], channels_new[ch]))
         print(mes)
 
     if args.pmse:
         mes = "PMSE:"
         for ch in range(len(channels_old)):
-            mes += " " + str(pmse(channels_old[ch], channels_new[ch]))
+            mes += " " + '%.2E' % Decimal(pmse(channels_old[ch], channels_new[ch]))
         print(mes)
         
     if args.snr:
         mes = "SNR:"
         for ch in range(len(channels_old)):
-            mes += " " + str(snr(channels_old[ch], channels_new[ch]))
+            mes += " " + '%.2E' % Decimal(snr(channels_old[ch], channels_new[ch]))
         print(mes)
     
     if args.psnr:
         mes = "PSNR:"
         for ch in range(len(channels_old)):
-            mes += " " + str(psnr(channels_old[ch], channels_new[ch]))
+            mes += " " + '%.2E' % Decimal(psnr(channels_old[ch], channels_new[ch]))
         print(mes)
 
     if args.md:
         mes = "MD:"
         for ch in range(len(channels_old)):
-            mes += " " + str(md(channels_old[ch], channels_new[ch]))
+            mes += " " + '%.2E' % Decimal(md(channels_old[ch], channels_new[ch]))
         print(mes)
 
 def main():
