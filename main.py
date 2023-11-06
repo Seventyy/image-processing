@@ -5,7 +5,6 @@ import argparse
 
 sys.path.insert(0, f'./src')
 from cli import *
-from img_io import *
 from elementary import *
 from geometric import *
 from noise_removal import *
@@ -120,7 +119,8 @@ def main():
         pixels_new = handle_operation(pixels_new)
     
     # FINALIZATION
-    finish_img(pixels_new, image)
+
+    Image.fromarray(pixels.astype(np.uint8)).save(args.output)
 
 if __name__ == "__main__":
     main()
