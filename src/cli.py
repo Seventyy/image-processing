@@ -7,15 +7,16 @@ def parse_cli():
     parser = argparse.ArgumentParser(
         prog='imgproc',
         description='A lightweight image processing utility made in python.',
-        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE]',
+        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE] [-m]',
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('-i', '--input', help='Path to the image source', required=True)
-    parser.add_argument('-o', '--output', default='output.bmp', help='Path to the image output')
+    parser.add_argument('-o', '--output', default='output.bmp', help='path to the image output, \'output.bmp\' by default. Used only in case of graphical operations')
     parser.add_argument('-c', '--compare', help='Path to the second image that the input will be compared to. Required by analysis methods. If unused, analysis will be performed on output')
     
-    parser.add_argument('-v', '--value', help='Numerical value required by some commands')
+    parser.add_argument('-v', '--value', help='A numerical value used in the --brightness and –-contrast operations')
     parser.add_argument('-k', '--kernel', default='1', help='Size of the kernel required by some commmands')
+    parser.add_argument('-p', '--ptest', action='store_true', help='Makes the program carry out a performance test')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True

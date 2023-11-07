@@ -4,6 +4,9 @@ import numpy as np
 import argparse
 from decimal import Decimal
 
+import tracemalloc
+import time
+
 sys.path.insert(0, f'./src')
 from cli import *
 from elementary import *
@@ -93,6 +96,12 @@ def handle_analysis(org_img, new_img):
             mes += " " + '%.2E' % Decimal(md(channels_old[ch], channels_new[ch]))
         print(mes)
 
+def stop_memtest():
+    current, peak = tracemalloc.get_traced_memory()
+    print('Memory: ' + f"{(peak)/1000:.2f}" + 'KB')
+    print('Time: ' + f"{time.process_time() - start_time:.2f}" + 's')
+    tracemalloc.stop()
+
 def main():
     global args
 
@@ -104,10 +113,16 @@ def main():
     pixels_new = pixels_old.copy()
 
     # ANALYSIS
+    if args.ptest:
+        global start_time
+        tracemalloc.start()
+        start_time = time.process_time()
 
     if is_command_analysis(args):
         compare_img = Image.open(args.compare)
         handle_analysis(pixels_old, np.array(compare_img))
+        if args.ptest:
+            stop_memtest()
         return
 
     # PROCESSING
@@ -120,6 +135,9 @@ def main():
     else:
         pixels_new = handle_operation(pixels_new)
     
+    if args.ptest:
+        stop_memtest()
+
     # FINALIZATION
 
     Image.fromarray(pixels_new.astype(np.uint8)).save(args.output)
