@@ -97,9 +97,13 @@ def parse_cli():
     # HISTOGRAM
 
     command_group.add_argument('--histogram',
-        help='Creates a histogram of the channel specified by -ch',
+        help='Creates a histogram of the channel specified by -ch\n\n',
         action='store_true')
     
+    command_group.add_argument('--hraleigh',
+        help='Raleigh final probability density function. Takes -i as a histogram',
+        action='store_true')
+
     # EDGECASES
 
     args = parser.parse_args()

@@ -134,8 +134,20 @@ def main():
         channels = {'R' : 0, 'G': 1, 'B': 2}
         channel_no = channels[args.channel]
         
-        pixels_new = histogram(pixels_old[:,:,channel_no])
+        pixels_new = write_histogram(pixels_old[:,:,channel_no])
         finalize_img(pixels_new)
+        return
+
+    if args.hraleigh:
+        if pixels_old.shape[1] != 256:
+            print('Error! Incorrect histagram size!')
+            return
+        if len(pixels_old.shape) > 2:
+            print('Error! Histogram should be monochrome!')
+            return
+
+        data = read_histogram(pixels_old)
+        print(data)
         return
 
     # PROCESSING
