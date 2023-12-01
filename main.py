@@ -13,6 +13,7 @@ from elementary import *
 from geometric import *
 from noise_removal import *
 from analysis import *
+from histogram import *
 
 def handle_operation(channel):
     if args.brightness:
@@ -102,6 +103,9 @@ def stop_memtest():
     print('Time: ' + f"{time.process_time() - start_time:.2f}" + 's')
     tracemalloc.stop()
 
+def finalize_img(img):
+    Image.fromarray(img.astype(np.uint8)).save(args.output)
+
 def main():
     global args
 
@@ -113,6 +117,7 @@ def main():
     pixels_new = pixels_old.copy()
 
     # ANALYSIS
+    
     if args.ptest:
         global start_time
         tracemalloc.start()
@@ -123,6 +128,14 @@ def main():
         handle_analysis(pixels_old, np.array(compare_img))
         if args.ptest:
             stop_memtest()
+        return
+
+    if args.histogram:
+        channels = {'R' : 0, 'G': 1, 'B': 2}
+        channel_no = channels[args.channel]
+        
+        pixels_new = histogram(pixels_old[:,:,channel_no])
+        finalize_img(pixels_new)
         return
 
     # PROCESSING
@@ -140,7 +153,7 @@ def main():
 
     # FINALIZATION
 
-    Image.fromarray(pixels_new.astype(np.uint8)).save(args.output)
+    finalize_img(pixels_new)
 
 if __name__ == "__main__":
     main()

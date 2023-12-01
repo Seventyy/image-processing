@@ -7,7 +7,7 @@ def parse_cli():
     parser = argparse.ArgumentParser(
         prog='imgproc',
         description='A lightweight image processing utility made in python.',
-        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE] [-m]',
+        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE] [-ch CHANNEL] [-p]',
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('-i', '--input', help='Path to the image source', required=True)
@@ -17,6 +17,7 @@ def parse_cli():
     parser.add_argument('-v', '--value', help='A numerical value used in the --brightness and –-contrast operations')
     parser.add_argument('-k', '--kernel', default='1', help='Size of the kernel required by some commmands')
     parser.add_argument('-p', '--ptest', action='store_true', help='Makes the program carry out a performance test')
+    parser.add_argument('-ch', '--channel', help='Selects the channel for the --histogram operation. Only \'R\', \'G\', or \'B\'.')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
@@ -90,9 +91,17 @@ def parse_cli():
         action='store_true')
     
     command_group.add_argument('--report',
-        help='Performs all analysis methods',
+        help='Performs all analysis methods\n\n',
+        action='store_true')
+
+    # HISTOGRAM
+
+    command_group.add_argument('--histogram',
+        help='Creates a histogram of the channel specified by -ch',
         action='store_true')
     
+    # EDGECASES
+
     args = parser.parse_args()
 
     if not args.value and (args.brightness or args.contrast):
@@ -103,5 +112,14 @@ def parse_cli():
     
     if args.value and not (args.brightness or args.contrast):
         print('Ignoring -v/--value argument')
+
+    if args.histogram and not args.channel:
+        parser.error('-ch/--channel argument is required for current command!')
+
+    if args.histogram and args.channel not in {'R', 'G', 'B'}:
+        parser.error('-ch/--channel can only take R, G or B.')
+    
+    if args.channel and not args.histogram:
+        print('Ignoring -ch/--channel argument')
 
     return args
