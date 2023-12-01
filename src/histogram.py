@@ -15,7 +15,8 @@ def histogram(img):
 
     hist_img = np.ones([HEIGHT, 256]) * 255
     for x in range(256):
-        y = HEIGHT - 1 - int(hist_data[x] / max_value * HEIGHT)
-        hist_img[y, x] = 256
+        y_max = HEIGHT - 1 - int(hist_data[x] / max_value * HEIGHT)
+        for y in range(y_max, HEIGHT):
+            hist_img[y, x] = 0
 
     return hist_img
