@@ -152,13 +152,16 @@ def main():
             pixels_new = hist_to_img(histogram_data(pixels_new[:,:,channel_no]))
 
     if args.hraleigh:
+        g_min = float(args.gmin)
+        alpha = float(args.alpha)
+
         if len(pixels_new.shape) == 3:
             pixels_new = np.dstack((
-                hraleigh(pixels_new[:,:,0], histogram_data(pixels_new[:,:,0])),
-                hraleigh(pixels_new[:,:,1], histogram_data(pixels_new[:,:,1])),
-                hraleigh(pixels_new[:,:,2], histogram_data(pixels_new[:,:,2]))))
+                hraleigh(pixels_new[:,:,0], histogram_data(pixels_new[:,:,0]), g_min, alpha),
+                hraleigh(pixels_new[:,:,1], histogram_data(pixels_new[:,:,1]), g_min, alpha),
+                hraleigh(pixels_new[:,:,2], histogram_data(pixels_new[:,:,2]), g_min, alpha)))
         else:
-            pixels_new = hraleigh(pixels_new, histogram_data(pixels_new))
+            pixels_new = hraleigh(pixels_new, histogram_data(pixels_new), g_min, alpha)
 
     # FINALIZATION
 

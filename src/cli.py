@@ -16,7 +16,7 @@ def parse_cli():
     parser = argparse.ArgumentParser(
         prog='imgproc',
         description='A lightweight image processing utility made in python.',
-        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE] [-ch CHANNEL] [-p]',
+        usage='%(prog)s [-h] COMMAND -i INPUT [-o OUTPUT] [-c COMPARE] [-v VALUE] [-k KERNEL_SIZE] [-ch CHANNEL] [-p] [-a ALPHA] [-gm G_MIN]',
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('-i', '--input', help='Path to the image source', required=True)
@@ -27,6 +27,9 @@ def parse_cli():
     parser.add_argument('-k', '--kernel', default='1', help='Size of the kernel required by some commmands')
     parser.add_argument('-p', '--ptest', action='store_true', help='Makes the program carry out a performance test')
     parser.add_argument('-ch', '--channel', default='all', help='Selects the channel for the --histogram operation. Only \'R\', \'G\', \'B\' or \'all\' (default).')
+
+    parser.add_argument('-a', '--alpha', default=120, help='Alpha coefficient used for --raleigh. 120 by default.')
+    parser.add_argument('-gm', '--gmin', default=0, help='Minimum brightness used for --raleigh. 0 by default.')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
@@ -109,8 +112,10 @@ def parse_cli():
         help='Creates a histogram of the channel specified by -ch\n\n',
         action='store_true')
     
+    # QUALITY IMPROVEMENT
+
     command_group.add_argument('--hraleigh',
-        help='Raleigh final probability density function. Takes -i as a histogram',
+        help='Raleigh final probability density function. Takes the arguments -gm/--gmin and -a/--alpha',
         action='store_true')
 
     # EDGECASES
