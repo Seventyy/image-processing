@@ -12,6 +12,9 @@ def is_command_noiserem(args):
 def is_command_analysis(args):
     return args.mse or args.pmse or args.snr or args.psnr or args.md or args.report
 
+def is_command_characteristics(args):
+    return args.cmean or args.cvariance or args.cstdev or args.cvarcoi or args.cvarcoii or args.casyco or args.cflatco or args.centropy
+
 def parse_cli():
     parser = argparse.ArgumentParser(
         prog='imgproc',
@@ -115,7 +118,53 @@ def parse_cli():
     # QUALITY IMPROVEMENT
 
     command_group.add_argument('--hraleigh',
-        help='Raleigh final probability density function. Takes the arguments -gm/--gmin and -a/--alpha',
+        help='Raleigh final probability density function. Takes the arguments -gm/--gmin and -a/--alpha\n\n',
+        action='store_true')
+
+    # IMAGE CHARACTERISTICS
+
+    command_group.add_argument('--cmean',
+        help='Mean characteristic',
+        action='store_true')
+    
+    command_group.add_argument('--cvariance',
+        help='Variance characteristic',
+        action='store_true')
+
+    command_group.add_argument('--cstdev',
+        help='Standard deviation characteristic',
+        action='store_true')
+
+    command_group.add_argument('--cvarcoi',
+        help='Variation coefficient I characteristic',
+        action='store_true')
+
+    command_group.add_argument('--cvarcoii',
+        help='Variation coefficient II characteristic',
+        action='store_true')
+
+    command_group.add_argument('--casyco',
+        help='Asymmetry coefficient characteristic',
+        action='store_true')
+
+    command_group.add_argument('--cflatco',
+        help='Flattening coefficient characteristic',
+        action='store_true')
+
+    command_group.add_argument('--centropy',
+        help='Information source entropy characteristic\n\n',
+        action='store_true')
+
+    # LINEAR IMAGE FILTRATION
+
+    command_group.add_argument('--sexdeti',
+        help='Extraction of deteials I. N, NE, E, SE filters\n\n',
+        action='store_true')
+
+    # NON-LINEAR IMAGE FILTRATION
+
+    command_group.add_argument('--okirsf',
+        help='Kirsh operator',
         action='store_true')
 
     # EDGECASES
