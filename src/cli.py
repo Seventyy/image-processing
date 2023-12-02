@@ -1,5 +1,14 @@
 import argparse
 
+def is_command_elementary(args):
+    return args.brightness or args.negative or args.contrast
+    
+def is_command_geometric(args):
+    return args.hflip or args.vflip or args.dflip or args.shrink or args.enlarge
+
+def is_command_noiserem(args):
+    return args.amean or args.adaptive
+
 def is_command_analysis(args):
     return args.mse or args.pmse or args.snr or args.psnr or args.md or args.report
 

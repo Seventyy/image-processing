@@ -117,19 +117,25 @@ def main():
     pixels_old = np.array(image)
     pixels_new = pixels_old.copy()
 
-    # ANALYSIS
-    
     if args.ptest:
         global start_time
         tracemalloc.start()
         start_time = time.process_time()
+    
+    # PROCESSING
+
+    if is_command_elementary(args) or is_command_geometric(args) or is_command_noiserem(args):
+        if len(pixels_new.shape) == 3:
+            pixels_new = np.dstack((
+                handle_operation(pixels_new[:,:,0]),
+                handle_operation(pixels_new[:,:,1]),
+                handle_operation(pixels_new[:,:,2])))
+        else:
+            pixels_new = handle_operation(pixels_new)
 
     if is_command_analysis(args):
         compare_img = Image.open(args.compare)
         handle_analysis(pixels_old, np.array(compare_img))
-        if args.ptest:
-            stop_memtest()
-        return
 
     if args.histogram:
         if args.channel == 'all':
@@ -141,9 +147,6 @@ def main():
             channels = {'R' : 0, 'G': 1, 'B': 2}
             channel_no = channels[args.channel]
             pixels_new = hist_to_img(histogram_data(pixels_old[:,:,channel_no]))
-        
-        finalize_img(pixels_new)
-        return
 
     if args.hraleigh:
         if len(pixels_new.shape) == 3:
@@ -153,26 +156,13 @@ def main():
                 hraleigh(pixels_new[:,:,2], histogram_data(pixels_new[:,:,2]))))
         else:
             pixels_new = hraleigh(pixels_new, histogram_data(pixels_new))
-        
-        finalize_img(pixels_new)
-        return
 
-    # PROCESSING
-    
-    if len(pixels_new.shape) == 3:
-        pixels_new = np.dstack((
-            handle_operation(pixels_new[:,:,0]),
-            handle_operation(pixels_new[:,:,1]),
-            handle_operation(pixels_new[:,:,2])))
-    else:
-        pixels_new = handle_operation(pixels_new)
+    # FINALIZATION
     
     if args.ptest:
         stop_memtest()
-
-    # FINALIZATION
-
-    finalize_img(pixels_new)
+    if not is_command_analysis(args):
+        finalize_img(pixels_new)
 
 if __name__ == "__main__":
     main()
