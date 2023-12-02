@@ -138,7 +138,10 @@ def main():
         handle_analysis(pixels_old, np.array(compare_img))
 
     if args.histogram:
-        if args.channel == 'all':
+        if len(pixels_new.shape) == 2:
+            print('WARNING: Image is monochrome, ignoring -ch/--channel argument')
+            pixels_new = hist_to_img(histogram_data(pixels_new))
+        elif args.channel == 'all':
             pixels_new = np.dstack((
                 hist_to_img(histogram_data(pixels_new[:,:,0]), True),
                 hist_to_img(histogram_data(pixels_new[:,:,1]), True),
@@ -146,7 +149,7 @@ def main():
         else:
             channels = {'R' : 0, 'G': 1, 'B': 2}
             channel_no = channels[args.channel]
-            pixels_new = hist_to_img(histogram_data(pixels_old[:,:,channel_no]))
+            pixels_new = hist_to_img(histogram_data(pixels_new[:,:,channel_no]))
 
     if args.hraleigh:
         if len(pixels_new.shape) == 3:
@@ -158,7 +161,7 @@ def main():
             pixels_new = hraleigh(pixels_new, histogram_data(pixels_new))
 
     # FINALIZATION
-    
+
     if args.ptest:
         stop_memtest()
     if not is_command_analysis(args):
