@@ -134,9 +134,9 @@ def main():
     if args.histogram:
         if args.channel == 'all':
             pixels_new = np.dstack((
-                hist_to_img(histogram_data(pixels_new[:,:,0])),
-                hist_to_img(histogram_data(pixels_new[:,:,1])),
-                hist_to_img(histogram_data(pixels_new[:,:,2]))))
+                hist_to_img(histogram_data(pixels_new[:,:,0]), True),
+                hist_to_img(histogram_data(pixels_new[:,:,1]), True),
+                hist_to_img(histogram_data(pixels_new[:,:,2]), True)))
         else:
             channels = {'R' : 0, 'G': 1, 'B': 2}
             channel_no = channels[args.channel]
