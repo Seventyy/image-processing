@@ -14,6 +14,7 @@ from geometric import *
 from noise_removal import *
 from analysis import *
 from histogram import *
+from quality_improvement import *
 
 def handle_operation(channel):
     if args.brightness:
@@ -131,23 +132,29 @@ def main():
         return
 
     if args.histogram:
-        channels = {'R' : 0, 'G': 1, 'B': 2}
-        channel_no = channels[args.channel]
+        if args.channel == 'all':
+            pixels_new = np.dstack((
+                hist_to_img(histogram_data(pixels_new[:,:,0])),
+                hist_to_img(histogram_data(pixels_new[:,:,1])),
+                hist_to_img(histogram_data(pixels_new[:,:,2]))))
+        else:
+            channels = {'R' : 0, 'G': 1, 'B': 2}
+            channel_no = channels[args.channel]
+            pixels_new = hist_to_img(histogram_data(pixels_old[:,:,channel_no]))
         
-        pixels_new = write_histogram(pixels_old[:,:,channel_no])
         finalize_img(pixels_new)
         return
 
     if args.hraleigh:
-        if pixels_old.shape[1] != 256:
-            print('Error! Incorrect histagram size!')
-            return
-        if len(pixels_old.shape) > 2:
-            print('Error! Histogram should be monochrome!')
-            return
-
-        data = read_histogram(pixels_old)
-        print(data)
+        if len(pixels_new.shape) == 3:
+            pixels_new = np.dstack((
+                hraleigh(pixels_new[:,:,0], histogram_data(pixels_new[:,:,0])),
+                hraleigh(pixels_new[:,:,1], histogram_data(pixels_new[:,:,1])),
+                hraleigh(pixels_new[:,:,2], histogram_data(pixels_new[:,:,2]))))
+        else:
+            pixels_new = hraleigh(pixels_new, histogram_data(pixels_new))
+        
+        finalize_img(pixels_new)
         return
 
     # PROCESSING

@@ -17,7 +17,7 @@ def parse_cli():
     parser.add_argument('-v', '--value', help='A numerical value used in the --brightness and –-contrast operations')
     parser.add_argument('-k', '--kernel', default='1', help='Size of the kernel required by some commmands')
     parser.add_argument('-p', '--ptest', action='store_true', help='Makes the program carry out a performance test')
-    parser.add_argument('-ch', '--channel', help='Selects the channel for the --histogram operation. Only \'R\', \'G\', or \'B\'.')
+    parser.add_argument('-ch', '--channel', default='all', help='Selects the channel for the --histogram operation. Only \'R\', \'G\', \'B\' or \'all\' (default).')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
@@ -120,10 +120,7 @@ def parse_cli():
     if args.histogram and not args.channel:
         parser.error('-ch/--channel argument is required for current command!')
 
-    if args.histogram and args.channel not in {'R', 'G', 'B'}:
-        parser.error('-ch/--channel can only take R, G or B.')
-    
-    if args.channel and not args.histogram:
-        print('Ignoring -ch/--channel argument')
+    if args.histogram and args.channel not in {'R', 'G', 'B', 'all'}:
+        parser.error('-ch/--channel can only take R, G, B or all.')
 
     return args
