@@ -16,6 +16,7 @@ from analysis import *
 from histogram import *
 from quality_improvement import *
 from filtration import *
+from characteristics import *
 
 def handle_operation(channel):
     if args.brightness:
@@ -47,6 +48,31 @@ def handle_operation(channel):
     
     if args.adaptive:
         return adaptive(channel, int(args.kernel))
+    
+    if args.cmean:
+        return cmean(channel)
+    
+    if args.cvariance:
+        return cvariance(channel)
+    
+    if args.cstdev:
+        return cstdev(channel)
+    
+    if args.cvarcoi:
+        return cvarcoi(channel)
+    
+    if args.casyco:
+        return casyco(channel)
+    
+    if args.cflatco:
+        return cflatco(channel)
+    
+    if args.cvarcoii:
+        return cvarcoii(channel)
+    
+    if args.centropy:
+        return centropy(channel)
+    
     
     return False
 
@@ -133,6 +159,14 @@ def main():
                 handle_operation(pixels_new[:,:,2])))
         else:
             pixels_new = handle_operation(pixels_new)
+
+    if is_command_characteristics(args):
+        if len(pixels_new.shape) == 3:
+            print(handle_operation(pixels_new[:,:,0]))
+            print(handle_operation(pixels_new[:,:,1]))
+            print(handle_operation(pixels_new[:,:,2]))
+        else:
+            print(handle_operation(pixels_new))
 
     if is_command_analysis(args):
         compare_img = Image.open(args.compare)
