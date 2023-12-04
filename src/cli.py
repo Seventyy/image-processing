@@ -34,6 +34,8 @@ def parse_cli():
     parser.add_argument('-a', '--alpha', default=120, help='Alpha coefficient used for --raleigh. 120 by default.')
     parser.add_argument('-gm', '--gmin', default=0, help='Minimum brightness used for --raleigh. 0 by default.')
 
+    parser.add_argument('-m', '--mask', default='N', help='Mask type used for --sexdeti. \'N\' (default), \'NE\', \'E\' or \'SE\'.')
+
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
 
@@ -185,5 +187,8 @@ def parse_cli():
 
     if args.histogram and args.channel not in {'R', 'G', 'B', 'all'}:
         parser.error('-ch/--channel can only take R, G, B or all.')
+
+    if args.sexdeti and args.mask not in {'N', 'NE', 'E', 'SE'}:
+        parser.error('-m/--mask can only take N, NE, E or SE.')
 
     return args

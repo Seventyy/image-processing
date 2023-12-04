@@ -173,6 +173,15 @@ def main():
         else:
             pixels_new = okirsf(pixels_new)
 
+    if args.sexdeti:
+        if len(pixels_new.shape) == 3:
+            pixels_new = np.dstack((
+                sexdeti(pixels_new[:,:,0], args.mask),
+                sexdeti(pixels_new[:,:,1], args.mask),
+                sexdeti(pixels_new[:,:,2], args.mask)))
+        else:
+            pixels_new = sexdeti(pixels_new, args.mask)
+
     # FINALIZATION
 
     if args.ptest:
