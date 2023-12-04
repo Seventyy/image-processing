@@ -65,12 +65,11 @@ def sexdeti(img, mask_name):
 
     for x in range(1, img.shape[0] - 1):
         for y in range(1, img.shape[1] - 1):
+            sum = 0
             for i in range(3):
                 for j in range(3):
-                    val = mask[i, j] * img[x + i - 1, y + j - 1]
-                    # print(val)
-                    new_img[x, y] = val
-                    # new_img[x, y] = max(min(val, 255), 0)
+                    sum += mask[i, j] * img[x + i - 1, y + j - 1]
+            new_img[x, y] = max(min(sum, 255), 0)
 
     return new_img
 
