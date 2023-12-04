@@ -74,7 +74,7 @@ def sexdeti(img, mask_name):
     return new_img
 
 def okirsf(img):
-    output_img = np.zeros(img.shape)
+    output_img = np.zeros_like(img)
 
     for x in range(1, img.shape[0] - 1):
         for y in range(1, img.shape[1] - 1):
@@ -86,6 +86,6 @@ def okirsf(img):
                         pixel = img[x + xi - 1, y + yi - 1]
                         m_sum += pixel * mask[yi, xi]
                 max_msk = max(max_msk, abs(m_sum))
-            output_img[x, y] = max(1, max_msk)
+            output_img[x, y] = min(max(0, max_msk), 255)
     
     return output_img
