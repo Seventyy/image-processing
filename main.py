@@ -15,6 +15,7 @@ from noise_removal import *
 from analysis import *
 from histogram import *
 from quality_improvement import *
+from filtration import *
 
 def handle_operation(channel):
     if args.brightness:
@@ -162,6 +163,15 @@ def main():
                 hraleigh(pixels_new[:,:,2], histogram_data(pixels_new[:,:,2]), g_min, alpha)))
         else:
             pixels_new = hraleigh(pixels_new, histogram_data(pixels_new), g_min, alpha)
+
+    if args.okirsf:
+        if len(pixels_new.shape) == 3:
+            pixels_new = np.dstack((
+                okirsf(pixels_new[:,:,0]),
+                okirsf(pixels_new[:,:,1]),
+                okirsf(pixels_new[:,:,2])))
+        else:
+            pixels_new = okirsf(pixels_new)
 
     # FINALIZATION
 
