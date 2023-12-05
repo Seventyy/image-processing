@@ -216,6 +216,15 @@ def main():
         else:
             pixels_new = sexdeti(pixels_new, args.mask)
 
+    if args.optsexdetn:
+        if len(pixels_new.shape) == 3:
+            pixels_new = np.dstack((
+                optsexdetn(pixels_new[:,:,0]),
+                optsexdetn(pixels_new[:,:,1]),
+                optsexdetn(pixels_new[:,:,2])))
+        else:
+            pixels_new = optsexdetn(pixels_new)
+
     # FINALIZATION
 
     if args.ptest:

@@ -162,6 +162,10 @@ def parse_cli():
     command_group.add_argument('--sexdeti',
         help='Extraction of deteials I. N, NE, E, SE filters\n\n',
         action='store_true')
+    
+    command_group.add_argument('--optsexdetn',
+        help='Optimised extraction of deteials for north filter\n\n',
+        action='store_true')
 
     # NON-LINEAR IMAGE FILTRATION
 

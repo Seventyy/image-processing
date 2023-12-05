@@ -68,29 +68,26 @@ def sexdeti(img, mask_name):
             sum = 0
             for i in range(3):
                 for j in range(3):
-                    sum += mask[i, j] * img[x + i - 1, y + j - 1]
+                    sum += mask[j, i] * img[x + i - 1, y + j - 1]
             new_img[x, y] = max(min(sum, 255), 0)
 
     return new_img
 
-def optsexdetn(img, mask_name):
-    mask = sexdeti_masks[sexdeti_mask_ids[mask_name]]
+def optsexdetn(img):
     new_img = np.zeros_like(img)
 
     for x in range(1, img.shape[0] - 1):
         for y in range(1, img.shape[1] - 1):
-            new_img[x, y] = max(min((
-                  img[x - 2, y - 2]  
-                + img[x - 1, y - 2] 
-                + img[x    , y - 2] 
-
-                + img[x - 2, y - 1]
-                - img[x - 1, y - 1] * 2
-                + img[x    , y - 1]
-
-                - img[x - 2, y    ]
-                - img[x - 1, y    ]
-                - img[x    , y    ]
+            new_img[x, y] = max(min((int(
+                  img[x-1, y-1])
+                + img[x  , y-1]
+                + img[x+1, y-1]
+                + img[x-1, y  ]
+                - img[x  , y  ] * 2
+                + img[x+1, y  ]
+                - img[x-1, y+1]
+                - img[x  , y+1]
+                - img[x+1, y+1]
             ), 255), 0)
 
     return new_img
