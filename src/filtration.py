@@ -73,6 +73,29 @@ def sexdeti(img, mask_name):
 
     return new_img
 
+def optsexdetn(img, mask_name):
+    mask = sexdeti_masks[sexdeti_mask_ids[mask_name]]
+    new_img = np.zeros_like(img)
+
+    for x in range(1, img.shape[0] - 1):
+        for y in range(1, img.shape[1] - 1):
+            sum = (
+                  img[x - 2, y - 2]  
+                + img[x - 1, y - 2] 
+                + img[x    , y - 2] 
+
+                + img[x - 2, y - 1]
+                - img[x - 1, y - 1] * 2
+                + img[x    , y - 1]
+
+                - img[x - 2, y    ]
+                - img[x - 1, y    ]
+                - img[x    , y    ]
+            )
+            new_img[x, y] = max(min(sum, 255), 0)
+
+    return new_img
+
 def okirsf(img):
     output_img = np.zeros_like(img)
 
