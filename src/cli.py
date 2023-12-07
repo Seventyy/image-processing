@@ -1,19 +1,61 @@
 import argparse
+import numpy as np
 
-def is_command_elementary(args):
-    return args.brightness or args.negative or args.contrast
-    
-def is_command_geometric(args):
-    return args.hflip or args.vflip or args.dflip or args.shrink or args.enlarge
+def is_operation_transformation(args):
+    ops = np.array([
+        args.brightness,
+        args.negative,
+        args.contrast,
 
-def is_command_noiserem(args):
-    return args.amean or args.adaptive
+        args.hflip,
+        args.vflip,
+        args.dflip,
 
-def is_command_analysis(args):
-    return args.mse or args.pmse or args.snr or args.psnr or args.md or args.report
+        args.shrink,
+        args.enlarge,
 
-def is_command_characteristics(args):
-    return args.cmean or args.cvariance or args.cstdev or args.cvarcoi or args.cvarcoii or args.casyco or args.cflatco or args.centropy
+        args.amean,
+        args.adaptive,
+
+        args.hraleigh,
+        args.sexdeti,
+        args.optsexdetn,
+        args.okirsf
+    ])
+    for i in ops:
+        if i == True:
+            return True
+    return False
+
+def is_operation_comparison(args):
+    ops = np.array([
+        args.mse,
+        args.pmse,
+        args.snr,
+        args.psnr,
+        args.md,
+        args.report
+    ])
+    for i in ops:
+        if i == True:
+            return True
+    return False
+
+def is_operation_analysis(args):
+    ops = np.array([
+        args.cmean,
+        args.cvariance,
+        args.cstdev,
+        args.cvarcoi,
+        args.cvarcoii,
+        args.casyco,
+        args.cflatco,
+        args.centropy
+    ])
+    for i in ops:
+        if i == True:
+            return True
+    return False
 
 def parse_cli():
     parser = argparse.ArgumentParser(
@@ -180,7 +222,7 @@ def parse_cli():
     if not args.value and (args.brightness or args.contrast):
         parser.error('-v/--value argument is required for current command!')
 
-    if is_command_analysis(args) and not args.compare:
+    if is_operation_comparison(args) and not args.compare:
         parser.error('-c/--compare argument is required for current command!')
     
     if args.value and not (args.brightness or args.contrast):

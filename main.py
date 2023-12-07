@@ -12,13 +12,13 @@ from cli import *
 from elementary import *
 from geometric import *
 from noise_removal import *
-from analysis import *
+from comparison import *
 from histogram import *
 from quality_improvement import *
 from filtration import *
 from characteristics import *
 
-def handle_operation(channel):
+def handle_transformation(channel):
     if args.brightness:
         return brightness(channel, int(args.value))
 
@@ -45,38 +45,26 @@ def handle_operation(channel):
     
     if args.amean:
         return amean(channel, int(args.kernel))
-    
+
     if args.adaptive:
         return adaptive(channel, int(args.kernel))
-    
-    if args.cmean:
-        return cmean(channel)
-    
-    if args.cvariance:
-        return cvariance(channel)
-    
-    if args.cstdev:
-        return cstdev(channel)
-    
-    if args.cvarcoi:
-        return cvarcoi(channel)
-    
-    if args.casyco:
-        return casyco(channel)
-    
-    if args.cflatco:
-        return cflatco(channel)
-    
-    if args.cvarcoii:
-        return cvarcoii(channel)
-    
-    if args.centropy:
-        return centropy(channel)
-    
-    
-    return False
 
-def handle_analysis(org_img, new_img):
+    if args.hraleigh:
+        return hraleigh(pixels_new, histogram_data(pixels_new), float(args.gmin), float(args.alpha))
+
+    if args.sexdeti:
+        return sexdeti(channel, args.mask)
+
+    if args.optsexdetn:
+        return optsexdetn(channel)
+
+    if args.okirsf:
+        return okirsf(channel)
+
+    print('Error! Transformation not recognized!')
+    exit(1)
+
+def handle_comparison(org_img, new_img):
     if args.report:
         args.mse = True
         args.pmse = True
@@ -86,7 +74,7 @@ def handle_analysis(org_img, new_img):
 
     if len(org_img.shape) != len(new_img.shape):
         print('error: Cannot compare monochrome and colored pictures!')
-        exit()
+        exit(1)
 
     if len(org_img.shape) == 3:
         channels_old = [org_img[:,:,0], org_img[:,:,1], org_img[:,:,2]]
@@ -125,54 +113,78 @@ def handle_analysis(org_img, new_img):
             mes += " " + '%.2E' % Decimal(md(channels_old[ch], channels_new[ch]))
         print(mes)
 
-def stop_memtest():
-    current, peak = tracemalloc.get_traced_memory()
-    print('Memory: ' + f"{(peak)/1000:.2f}" + 'KB')
-    print('Time: ' + f"{time.process_time() - start_time:.2f}" + 's')
-    tracemalloc.stop()
+def handle_analysis(channel):
+    if args.cmean:
+        return cmean(channel)
+    
+    if args.cvariance:
+        return cvariance(channel)
+    
+    if args.cstdev:
+        return cstdev(channel)
+    
+    if args.cvarcoi:
+        return cvarcoi(channel)
 
-def finalize_img(img):
-    Image.fromarray(img.astype(np.uint8)).save(args.output)
+    if args.cvarcoii:
+        return cvarcoii(channel)
+    
+    if args.casyco:
+        return casyco(channel)
+    
+    if args.cflatco:
+        return cflatco(channel)
+    
+    if args.centropy:
+        return centropy(channel)
+    
+    print('Error! Analysis not recognized!')
+    exit(1)
 
 def main():
     global args
 
-    # INITIALIZATION
+    # INITIALIZATION - loading arguments and files
 
     args = parse_cli()
     image = Image.open(args.input)
     pixels_old = np.array(image)
     pixels_new = pixels_old.copy()
 
+    compare_img = False
+    pixels_compare = False
+    if args.compare:
+        compare_img = Image.open(args.compare)
+        pixels_compare = np.array(compare_img)
+
     if args.ptest:
         global start_time
         tracemalloc.start()
         start_time = time.process_time()
     
-    # PROCESSING
+    # PROCESSING - transformation, comparison or analysis
 
-    if is_command_elementary(args) or is_command_geometric(args) or is_command_noiserem(args):
+    if is_operation_transformation(args):
         if len(pixels_new.shape) == 3:
             pixels_new = np.dstack((
-                handle_operation(pixels_new[:,:,0]),
-                handle_operation(pixels_new[:,:,1]),
-                handle_operation(pixels_new[:,:,2])))
+                handle_transformation(pixels_new[:,:,0]),
+                handle_transformation(pixels_new[:,:,1]),
+                handle_transformation(pixels_new[:,:,2])))
         else:
-            pixels_new = handle_operation(pixels_new)
+            pixels_new = handle_transformation(pixels_new)
 
-    if is_command_characteristics(args):
+    if is_operation_comparison(args):
+        handle_comparison(pixels_old, pixels_compare)
+
+    if is_operation_analysis(args):
         if len(pixels_new.shape) == 3:
-            print(handle_operation(pixels_new[:,:,0]))
-            print(handle_operation(pixels_new[:,:,1]))
-            print(handle_operation(pixels_new[:,:,2]))
+            print(handle_transformation(pixels_new[:,:,0]))
+            print(handle_transformation(pixels_new[:,:,1]))
+            print(handle_transformation(pixels_new[:,:,2]))
         else:
-            print(handle_operation(pixels_new))
+            print(handle_transformation(pixels_new))
 
-    if is_command_analysis(args):
-        compare_img = Image.open(args.compare)
-        handle_analysis(pixels_old, np.array(compare_img))
-
-    if args.histogram:
+    if args.histogram:  # exception due to complexity
         if len(pixels_new.shape) == 2:
             print('WARNING: Image is monochrome, ignoring -ch/--channel argument')
             pixels_new = hist_to_img(histogram_data(pixels_new))
@@ -186,51 +198,16 @@ def main():
             channel_no = channels[args.channel]
             pixels_new = hist_to_img(histogram_data(pixels_new[:,:,channel_no]))
 
-    if args.hraleigh:
-        g_min = float(args.gmin)
-        alpha = float(args.alpha)
-
-        if len(pixels_new.shape) == 3:
-            pixels_new = np.dstack((
-                hraleigh(pixels_new[:,:,0], histogram_data(pixels_new[:,:,0]), g_min, alpha),
-                hraleigh(pixels_new[:,:,1], histogram_data(pixels_new[:,:,1]), g_min, alpha),
-                hraleigh(pixels_new[:,:,2], histogram_data(pixels_new[:,:,2]), g_min, alpha)))
-        else:
-            pixels_new = hraleigh(pixels_new, histogram_data(pixels_new), g_min, alpha)
-
-    if args.okirsf:
-        if len(pixels_new.shape) == 3:
-            pixels_new = np.dstack((
-                okirsf(pixels_new[:,:,0]),
-                okirsf(pixels_new[:,:,1]),
-                okirsf(pixels_new[:,:,2])))
-        else:
-            pixels_new = okirsf(pixels_new)
-
-    if args.sexdeti:
-        if len(pixels_new.shape) == 3:
-            pixels_new = np.dstack((
-                sexdeti(pixels_new[:,:,0], args.mask),
-                sexdeti(pixels_new[:,:,1], args.mask),
-                sexdeti(pixels_new[:,:,2], args.mask)))
-        else:
-            pixels_new = sexdeti(pixels_new, args.mask)
-
-    if args.optsexdetn:
-        if len(pixels_new.shape) == 3:
-            pixels_new = np.dstack((
-                optsexdetn(pixels_new[:,:,0]),
-                optsexdetn(pixels_new[:,:,1]),
-                optsexdetn(pixels_new[:,:,2])))
-        else:
-            pixels_new = optsexdetn(pixels_new)
-
-    # FINALIZATION
+    # FINALIZATION - finishing tests and saving files
 
     if args.ptest:
-        stop_memtest()
-    if not is_command_analysis(args):
-        finalize_img(pixels_new)
+        current, peak = tracemalloc.get_traced_memory()
+        print('Memory: ' + f"{(peak)/1000:.2f}" + 'KB')
+        print('Time: ' + f"{time.process_time() - start_time:.2f}" + 's')
+        tracemalloc.stop()
+    
+    if is_operation_transformation(args) or args.histogram:
+        Image.fromarray(pixels_new.astype(np.uint8)).save(args.output)
 
 if __name__ == "__main__":
     main()
