@@ -67,8 +67,7 @@ def main():
                 hist_to_img(histogram_data(G)),
                 hist_to_img(histogram_data(B))))
         else:
-            channels = {'R' : 0, 'G': 1, 'B': 2}
-            channel_no = channels[args.channel]
+            channel_no = {'R':0, 'G':1, 'B':2}[args.channel]
             output = np.zeros([100, 256, 3])
             output[:,:,channel_no] = hist_to_img(histogram_data(pixels_new[:,:,channel_no]))
             pixels_new = output
