@@ -8,7 +8,7 @@ def histogram_data(img):
             hist_data[intensity] += 1
     return hist_data
 
-def hist_to_img(hist_data, inverted: bool = False):
+def hist_to_img(hist_data, inverted: bool = True):
     H_WIDTH = 256
     H_HEIGHT = 100
     C_BG = 255 * (not inverted)
