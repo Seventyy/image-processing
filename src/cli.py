@@ -20,7 +20,13 @@ def is_operation_transformation(args):
         args.hraleigh,
         args.sexdeti,
         args.optsexdetn,
-        args.okirsf
+        args.okirsf,
+
+        args.dilation,
+        args.erosion,
+        args.opening,
+        args.closing,
+        args.hit_or_miss
     ])
     for i in ops:
         if i == True:
@@ -77,6 +83,8 @@ def parse_cli():
     parser.add_argument('-gm', '--gmin', default=0, help='Minimum brightness used for --raleigh. 0 by default.')
 
     parser.add_argument('-m', '--mask', default='N', help='Mask type used for --sexdeti. \'N\' (default), \'NE\', \'E\' or \'SE\'.')
+
+    parser.add_argument('-se', '--structural_element', help='An index from sample structural elements. Used for --dilation, --erosion, --opening, --closing, --hit_or_miss')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
@@ -214,6 +222,29 @@ def parse_cli():
     command_group.add_argument('--okirsf',
         help='Kirsh operator',
         action='store_true')
+
+    # MORPHOLOGICAL
+    
+    command_group.add_argument('--dilation', 
+        help='Performs dilation operation on an input. Requires use of -se to provide structural element',
+        action='store_true')
+    
+    command_group.add_argument('--erosion', 
+        help='Performs erosion operation on an input. Requires use of -se to provide structural element',
+        action='store_true')
+    
+    command_group.add_argument('--opening', 
+        help='Performs opening operation on an input. Requires use of -se to provide structural element',
+        action='store_true')
+    
+    command_group.add_argument('--closing', 
+        help='Performs closing operation on an input. Requires use of -se to provide structural element',
+        action='store_true')
+    
+    command_group.add_argument('--hit_or_miss', 
+        help='Performs hit_or_miss operation on an input. Requires use of -se to provide structural element',
+        action='store_true')
+    
 
     # EDGECASES
 
