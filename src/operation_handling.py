@@ -7,6 +7,7 @@ from comparison import *
 from quality_improvement import *
 from filtration import *
 from characteristics import *
+from morphology import *
 
 def handle_transformation(args, channel):
     if args.brightness:
@@ -50,6 +51,21 @@ def handle_transformation(args, channel):
 
     if args.okirsf:
         return okirsf(channel)
+
+    if args.dilation:
+        return dilation(channel, get_sample_se(args.structural_element))
+
+    if args.erosion:
+        return erosion(channel, get_sample_se(args.structural_element))
+
+    if args.opening:
+        return opening(channel, get_sample_se(args.structural_element))
+
+    if args.closing:
+        return closing(channel, get_sample_se(args.structural_element))
+
+    if args.hit_or_miss:
+        return hit_or_miss(channel, get_sample_se(args.structural_element))
 
     print('Error! Transformation not recognized!')
     exit(1)

@@ -82,7 +82,7 @@ def main():
         tracemalloc.stop()
     
     if is_operation_transformation(args) or args.histogram:
-        Image.fromarray(pixels_new.astype(np.uint8)).save(args.output)
+        Image.fromarray(pixels_new).save(args.output)
 
 if __name__ == "__main__":
     main()

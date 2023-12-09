@@ -268,4 +268,10 @@ def parse_cli():
     if args.sexdeti and args.mask not in {'N', 'NE', 'E', 'SE'}:
         parser.error('-m/--mask can only take N, NE, E or SE.')
 
+    if True in [args.dilation, args.erosion, args.opening, args.closing, args.hit_or_miss] and not args.structural_element:
+        parser.error('-se/--structural_element is required for current command!')
+
+    if args.structural_element not in [None, 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x']:
+        parser.error('-se/--structural_element can only take a roman letter from i to x!')
+
     return args

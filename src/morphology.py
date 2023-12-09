@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Tuple
 import numpy as np
 
+se_type = List[Tuple[int, int]]
 
-def dilation(img, se):
+def dilation(img, se: se_type):
     img_copy = img.copy()
 
     frame_size:int = 0
@@ -16,19 +17,19 @@ def dilation(img, se):
             img[x, y] = 1
     return img
 
-def erosion(img, se:List[(int,int)]):
-    pass
+def erosion(img, se:se_type):
+    return img
 
-def opening(img, se:List[(int,int)]):
-    pass
+def opening(img, se:se_type):
+    return img
 
-def closing(img, se:List[(int,int)]):
-    pass
+def closing(img, se:se_type):
+    return img
 
-def hit_or_miss(img, se_active:List[(int,int)], se_inactive:List[(int,int)]):
-    pass
+def hit_or_miss(img, se_active:se_type, se_inactive:se_type):
+    return img
 
-def get_sample_se(code):
+def get_sample_se(code) -> se_type:
     match code:
         case 'i':
             return [
@@ -103,3 +104,5 @@ def get_sample_se(code):
                 ( 0, 1),
                 ( 1,-1),
             ]
+    print('Error: unknown SE: ' + code)
+    exit(1)
