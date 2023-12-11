@@ -271,7 +271,8 @@ def parse_cli():
     if True in [args.dilation, args.erosion, args.opening, args.closing, args.hit_or_miss] and not args.structural_element:
         parser.error('-se/--structural_element is required for current command!')
 
-    if args.structural_element not in [None, 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x']:
-        parser.error('-se/--structural_element can only take a roman letter from i to x!')
+    if args.structural_element not in [None, 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x',
+        'xiE', 'xiS', 'xiW', 'xiN', 'xiiN', 'xiiNE', 'xiiE', 'xiiSE', 'xiiS', 'xiiSW', 'xiiW', 'xiiNW']:
+        parser.error('-se/--structural_element can only take a roman letter from i to xiiNW!')
 
     return args

@@ -65,7 +65,7 @@ def handle_transformation(args, channel):
         return closing(channel, get_sample_se(args.structural_element))
 
     if args.hit_or_miss:
-        return hit_or_miss(channel, get_sample_se(args.structural_element))
+        return hit_or_miss(channel, get_sample_se_hmt(args.structural_element))
 
     print('Error! Transformation not recognized!')
     exit(1)
