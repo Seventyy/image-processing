@@ -18,6 +18,7 @@ def main():
     image = Image.open(args.input)
     pixels_old = np.array(image)
     pixels_new = pixels_old.copy()
+    target_type = pixels_old.dtype
 
     if len(pixels_new.shape) == 3 and not is_operation_comparison(args):
         R = pixels_new[:,:,0]
@@ -58,6 +59,11 @@ def main():
             print(handle_analysis(args, pixels_new))
 
     if args.histogram:  # exception due to complexity
+        # target_type = np.uint8
+        if target_type == bool:
+            print('ERROR: Histogram for binary images is not supported!')
+            exit(1)
+        print(target_type)
         if len(pixels_new.shape) == 2:
             print('WARNING: Image is monochrome, ignoring -ch/--channel argument')
             pixels_new = hist_to_img(histogram_data(pixels_new))
@@ -82,7 +88,7 @@ def main():
         tracemalloc.stop()
     
     if is_operation_transformation(args) or args.histogram:
-        Image.fromarray(pixels_new).save(args.output)
+        Image.fromarray(pixels_new.astype(target_type)).save(args.output)
 
 if __name__ == "__main__":
     main()
