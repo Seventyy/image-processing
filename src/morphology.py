@@ -11,18 +11,18 @@ def erosion(img, se: se_type):
         frame_size = max(frame_size, abs(vec[0])) 
         frame_size = max(frame_size, abs(vec[1]))
             
-    for y in range(frame_size, img.shape[1] - frame_size):
-        for x in range(frame_size, img.shape[0] - frame_size):
+    for x in range(frame_size, img.shape[0] - frame_size):
+        for y in range(frame_size, img.shape[1] - frame_size):
             
             is_valid = True
             for i,j in se:
-                if img_copy[y+j, x+i] == 1:
+                if img_copy[x+i, y+j] == 1:
                     continue
                 else:
                     is_valid = False
                     break
             
-            img[y, x] = is_valid
+            img[x, y] = is_valid
     return img
 
 def dilation(img, se:se_type):
@@ -32,17 +32,16 @@ def dilation(img, se:se_type):
     for vec in se:
         frame_size = max(frame_size, abs(vec[0])) 
         frame_size = max(frame_size, abs(vec[1]))
-            
-    for y in range(frame_size, img.shape[1] - frame_size):
-        for x in range(frame_size, img.shape[0] - frame_size):
-            
+    
+    for x in range(frame_size, img.shape[0] - frame_size):
+        for y in range(frame_size, img.shape[1] - frame_size):
             is_valid = False
             for i,j in se:
-                if img_copy[y+j, x+i] == 1:
+                if img_copy[x+i, y+j] == 1:
                     is_valid = True
                     break
             
-            img[y, x] = is_valid
+            img[x, y] = is_valid
     return img
 
 def opening(img, se:se_type):
@@ -62,24 +61,24 @@ def hit_or_miss(img, se:(se_type, se_type)):
         frame_size = max(frame_size, abs(vec[0])) 
         frame_size = max(frame_size, abs(vec[1]))
             
-    for y in range(frame_size, img.shape[1] - frame_size):
-        for x in range(frame_size, img.shape[0] - frame_size):
+    for x in range(frame_size, img.shape[0] - frame_size):
+        for y in range(frame_size, img.shape[1] - frame_size):
             
             is_valid = True
             for i,j in se[1]:
-                if img_copy[y+j, x+i] == 1:
+                if img_copy[x+i, y+j] == 1:
                     continue
                 else:
                     is_valid = False
                     break
             for i,j in se[0]:
-                if img_copy[y+j, x+i] == 0:
+                if img_copy[x+i, y+j] == 0:
                     continue
                 else:
                     is_valid = False
                     break
             
-            img[y, x] = is_valid
+            img[x, y] = is_valid
     return img
 
 def get_sample_se_hmt(code) -> (se_type, se_type):
