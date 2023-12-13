@@ -26,7 +26,8 @@ def is_operation_transformation(args):
         args.erosion,
         args.opening,
         args.closing,
-        args.hit_or_miss
+        args.hit_or_miss,
+        args.region_growing
     ])
     for i in ops:
         if i == True:
@@ -245,6 +246,9 @@ def parse_cli():
         help='Performs hit_or_miss operation on an input. Requires use of -se to provide structural element',
         action='store_true')
     
+    command_group.add_argument('--region_growing',
+        help='Performs image segmentation via region growing algorithm.',
+        action='store_true')
 
     # EDGECASES
 

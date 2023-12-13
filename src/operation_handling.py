@@ -8,6 +8,7 @@ from quality_improvement import *
 from filtration import *
 from characteristics import *
 from morphology import *
+from segmentation import *
 
 def handle_transformation(args, channel):
     if args.brightness:
@@ -66,6 +67,9 @@ def handle_transformation(args, channel):
 
     if args.hit_or_miss:
         return hit_or_miss(channel, get_sample_se_hmt(args.structural_element))
+
+    if args.region_growing:
+        return region_growing(channel)
 
     print('Error! Transformation not recognized!')
     exit(1)
