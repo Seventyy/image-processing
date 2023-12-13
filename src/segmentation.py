@@ -42,8 +42,12 @@ def detect_region(img):
     se = get_sample_se('iii')
 
     # choose a seed
-    seedx = random.randint(0, img.shape[0])
-    seedy = random.randint(0, img.shape[1])
+    [seedx, seedy] = [0, 0]
+    while(True):
+        seedx = random.randint(0, img.shape[0])
+        seedy = random.randint(0, img.shape[1])
+        if img[seedx, seedy]:
+            break
     old_region[seedx, seedy] = 1
 
     frame = subframe(seedx, seedy, old_region.shape[0], old_region.shape[1])
@@ -53,31 +57,45 @@ def detect_region(img):
     while (True):
         iters += 1
         print(iters)
+        
+        # dilation of pixels in working frame
+        new = dilation(frame.get(old_region).copy(), se)
+        frame.set(new_region, new)
 
-        try: # TODO: debug the out-of-bounds exception
-            frame.set(new_region, dilation(frame.get(old_region).copy(), se))
-        except Exception as e:
-            print(e)
-            break
-
-        for x in range(new_region.shape[0]): # wspólna wartość
+        # intersection with orginal img
+        for x in range(new_region.shape[0]):
             for y in range(new_region.shape[1]):
                 new_region[x, y] = new_region[x, y] and img[x, y]
-        
-        print(frame.get(new_region))
 
-        # if iters == 10:
-        #     break
-
-        if np.array_equal(new_region, old_region): # jeśli oba równe to kończymy
+        if np.array_equal(new_region, old_region):
             break
         else:
             old_region = new_region.copy()
             frame.try_expand(new_region)
     
-    print(iters)
-
     return old_region
 
 def region_growing(img):
-    return detect_region(img)
+    [width, height] = img.shape
+
+    binary = np.full(img.shape, 0, dtype=bool)
+
+    treshold = 170
+
+    for x in range(width):
+        for y in range(height):
+            binary[x,y] = img[x,y] > treshold
+
+    region = detect_region(binary)
+    for x in range(width):
+        for y in range(height):
+            if region[x,y]:
+                img[x,y] = 255
+            elif binary[x,y]:
+                img[x,y] = 128
+            else:
+                img[x,y] = 0
+            # if not region[x,y]:
+            #     img[x,y] = max(min(img[x,y] - 100, 155), 0)
+    
+    return img
