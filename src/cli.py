@@ -87,7 +87,7 @@ def parse_cli():
     parser.add_argument('-m', '--mask', default='N', help='Mask type used for --sexdeti. \'N\' (default), \'NE\', \'E\' or \'SE\'.')
 
     parser.add_argument('-se', '--structural_element', help='An index from sample structural elements. Used for --dilation, --erosion, --opening, --closing, --hit_or_miss')
-    parser.add_argument('-point', '--point', help='A point for M3')
+    parser.add_argument('-pt', '--point', help='A point for M3. Given in format: \"uint,uint\", i.e: --point=4,6')
 
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
@@ -285,5 +285,8 @@ def parse_cli():
     if args.structural_element not in [None, 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x',
         'xiE', 'xiS', 'xiW', 'xiN', 'xiiN', 'xiiNE', 'xiiE', 'xiiSE', 'xiiS', 'xiiSW', 'xiiW', 'xiiNW']:
         parser.error('-se/--structural_element can only take a roman letter from i to xiiNW!')
+
+    if args.m3 and not args.point:
+        parser.error('-p/--point argument is required for current command!')
 
     return args

@@ -71,6 +71,10 @@ def handle_transformation(args, channel):
     if args.region_growing:
         return region_growing(channel)
 
+    if args.m3:
+        [x, y] = args.point.split(',')
+        return m3(channel, get_sample_se(args.structural_element), [int(x),int(y)])
+
     print('Error! Transformation not recognized!')
     exit(1)
 
