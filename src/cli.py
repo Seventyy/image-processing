@@ -87,8 +87,9 @@ def parse_cli():
     parser.add_argument('-m', '--mask', default='N', help='Mask type used for --sexdeti. \'N\' (default), \'NE\', \'E\' or \'SE\'.')
 
     parser.add_argument('-se', '--structural_element', help='An index from sample structural elements. Used for --dilation, --erosion, --opening, --closing, --hit_or_miss')
-    parser.add_argument('-pt', '--point', help='A point for M3. Given in format: \"uint,uint\", i.e: --point=4,6')
-
+    parser.add_argument('-pt', '--point', help='A point for M3. Given in format: \"uint,uint\", i.e: \"--point=\'4,6\'\"')
+    parser.add_argument('-sd', '--seed', help='Coordinates of multiple seed pixels used in region growing, in the format \"uint,uint uint,uint ...\", i.e. \"--seed=\'0,5 80,120 50,20\'\"')
+    parser.add_argument('-e', '--error', default=5, help='Absolute error used in region growing. Is equal to maximum intensity difference two pixels in one region can have. 5 by default.')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
@@ -288,5 +289,8 @@ def parse_cli():
 
     if args.m3 and not args.point:
         parser.error('-p/--point argument is required for current command!')
+
+    if args.region_growing and not args.seed:
+        parser.error('-sd/--seed argument is required for current command!')
 
     return args
