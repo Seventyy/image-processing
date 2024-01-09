@@ -292,10 +292,12 @@ def m3(img, se:se_type, point:(int,int)):
     new_img = np.full([img.shape[0], img.shape[1]], 0, dtype=bool)
     old_img[point[0], point[1]] = 1
 
-    while not are_equal(old_img, new_img):
+    while True:
+        new_img = give_intersection(dilation(old_img.copy(), se), img)
+        if are_equal(old_img, new_img):
+            break
         old_img = new_img.copy()
-        new_img = dilation(old_img, se)
-    
+
     return new_img
 
 def are_equal(img_a, img_b):
@@ -304,3 +306,12 @@ def are_equal(img_a, img_b):
             if img_a[x, y] != img_b[x, y]:
                 return False
     return True
+
+def give_intersection(img_a, img_b):
+    new_img = np.full([img_a.shape[0], img_a.shape[1]], 0, dtype=bool)
+
+    for x in range(0, img_a.shape[0]):
+        for y in range(0, img_a.shape[1]):
+            if img_a[x, y] == 1 and img_b[x, y] == 1:
+                new_img[x, y] = 1
+    return new_img
