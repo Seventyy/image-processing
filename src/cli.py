@@ -27,7 +27,8 @@ def is_operation_transformation(args):
         args.opening,
         args.closing,
         args.hit_or_miss,
-        args.region_growing
+        args.region_growing,
+        args.m3
     ])
     for i in ops:
         if i == True:
@@ -86,6 +87,8 @@ def parse_cli():
     parser.add_argument('-m', '--mask', default='N', help='Mask type used for --sexdeti. \'N\' (default), \'NE\', \'E\' or \'SE\'.')
 
     parser.add_argument('-se', '--structural_element', help='An index from sample structural elements. Used for --dilation, --erosion, --opening, --closing, --hit_or_miss')
+    parser.add_argument('-point', '--point', help='A point for M3')
+
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
@@ -249,6 +252,10 @@ def parse_cli():
     command_group.add_argument('--region_growing',
         help='Performs image segmentation via region growing algorithm.',
         action='store_true')
+    
+    command_group.add_argument('--m3',
+        help='Performs m3.',
+        action='store_true')
 
     # EDGECASES
 
@@ -272,7 +279,7 @@ def parse_cli():
     if args.sexdeti and args.mask not in {'N', 'NE', 'E', 'SE'}:
         parser.error('-m/--mask can only take N, NE, E or SE.')
 
-    if True in [args.dilation, args.erosion, args.opening, args.closing, args.hit_or_miss] and not args.structural_element:
+    if True in [args.dilation, args.erosion, args.opening, args.closing, args.hit_or_miss, args.m3] and not args.structural_element:
         parser.error('-se/--structural_element is required for current command!')
 
     if args.structural_element not in [None, 'i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x',

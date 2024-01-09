@@ -285,3 +285,22 @@ def get_sample_se(code) -> se_type:
         ]
     print('Error: unknown SE: ' + code)
     exit(1)
+
+def m3(img, se:se_type, point:(int,int)):
+    
+    old_img = np.full([img.shape[0], img.shape[1]], 0)
+    new_img = np.full([img.shape[0], img.shape[1]], 0)
+    old_img[point[0], point[1]] = 1
+
+    while not are_equal(old_img, new_img):
+        old_img = new_img.copy()
+        new_img = dilation(old_img, se) 
+
+
+
+def are_equal(img_a, img_b):
+    for x in range(0, img_a.shape[0]):
+        for y in range(0, img_a.shape[1]):
+            if img_a[x, y] != img_b[x, y]:
+                return False
+    return True
