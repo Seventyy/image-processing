@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from morphology import get_sample_se, dilation
+from morphology import get_sample_se, dilation, erosion
 
 class subframe:
     def __init__(self, startx, starty, width, height):
@@ -91,17 +91,16 @@ def detect_region(region, img, error, seedx, seedy):
             break
         else:
             frame.try_expand(region)
-    print([seedx, seedy])
+    print(f'used seed: {[seedx, seedy]}')
     return region
 
-def region_growing(img):
+def region_growing(img, seeds, error):
     [width, height] = img.shape
     
-    error = 5
-    seeds = [
-        [184, 168],
-        [68, 492]
-    ]
+    # seeds = [
+    #     [184, 168],
+    #     [68, 492]
+    # ]
 
     region = np.full(img.shape, False, dtype=bool)
 
@@ -112,6 +111,12 @@ def region_growing(img):
         for x in range(width):
             for y in range(height):
                 region[x,y] = new_region[x,y] or region[x,y]
+    
+    dilated = dilation(region.copy(), get_sample_se('iii'))
+    eroded = erosion(region.copy(), get_sample_se('iii'))
+    for x in range(width):
+        for y in range(height):
+            region[x,y] = dilated[x,y] and not eroded[x,y]
 
     for x in range(width):
         for y in range(height):

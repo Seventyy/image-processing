@@ -69,7 +69,15 @@ def handle_transformation(args, channel):
         return hit_or_miss(channel, get_sample_se_hmt(args.structural_element))
 
     if args.region_growing:
-        return region_growing(channel)
+        txt = []
+        txt.extend(args.seed.split(' '))
+        seeds = []
+        for pair in txt:
+            [x, y] = pair.split(',')
+            seeds.append([int(x), int(y)])
+        print(seeds)
+
+        return region_growing(channel, seeds, int(args.error))
 
     if args.m3:
         [x, y] = args.point.split(',')
