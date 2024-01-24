@@ -9,6 +9,7 @@ from filtration import *
 from characteristics import *
 from morphology import *
 from segmentation import *
+from fourier import *
 
 def handle_transformation(args, channel):
     if args.brightness:
@@ -82,6 +83,40 @@ def handle_transformation(args, channel):
     if args.m3:
         [x, y] = args.point.split(',')
         return m3(channel, get_sample_se(args.structural_element), [int(x),int(y)])
+
+    # fourier
+
+    if args.dft:
+        return discrete_fourier(channel)
+
+    if args.idft:
+        return inverse_discrete_fourier(channel)
+
+    if args.fft:
+        return fast_fourier(channel)
+
+    if args.ifft:
+        return inverse_fast_fourier(channel)
+
+    # filters
+
+    if args.lowpassf:
+        return lowpass(channel)
+    
+    if args.highpassf:
+        return highpass(channel)
+    
+    if args.bandpassf:
+        return bandpass(channel)
+    
+    if args.bandcutf:
+        return bandcut(channel)
+    
+    if args.edgehpf:
+        return highpassedge(channel)
+    
+    if args.phasef:
+        return phasefilter(channel)
 
     print('Error! Transformation not recognized!')
     exit(1)

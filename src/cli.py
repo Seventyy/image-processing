@@ -28,7 +28,19 @@ def is_operation_transformation(args):
         args.closing,
         args.hit_or_miss,
         args.region_growing,
-        args.m3
+        args.m3,
+
+        args.dft,
+        args.idft,
+        args.fft,
+        args.ifft,
+
+        args.lowpassf,
+        args.highpassf,
+        args.bandpassf,
+        args.bandcutf,
+        args.edgehpf,
+        args.phasef
     ])
     for i in ops:
         if i == True:
@@ -256,6 +268,50 @@ def parse_cli():
     
     command_group.add_argument('--m3',
         help='Performs m3.',
+        action='store_true')
+
+    # FOURIER
+
+    command_group.add_argument('--dft',
+        help='Performs Discrete Fourier Transform.',
+        action='store_true')
+
+    command_group.add_argument('--idft',
+        help='Performs Inverse Discrete Fourier Transform.',
+        action='store_true')
+
+    command_group.add_argument('--fft',
+        help='Performs Fast Fourier Transform with decimation in frequency domain.',
+        action='store_true')
+
+    command_group.add_argument('--ifft',
+        help='Performs Inverse Fast Fourier Transform with decimation in frequency domain.',
+        action='store_true')
+
+    # FILTERS
+
+    command_group.add_argument('--lowpassf',
+        help='Performs Low-pass filter.',
+        action='store_true')
+
+    command_group.add_argument('--highpassf',
+        help='Performs High-pass filter.',
+        action='store_true')
+
+    command_group.add_argument('--bandpassf',
+        help='Performs Band-pass filter.',
+        action='store_true')
+
+    command_group.add_argument('--bandcutf',
+        help='Performs Band-cut filter.',
+        action='store_true')
+
+    command_group.add_argument('--edgehpf',
+        help='Performs High-pass filter with detection of edge direction.',
+        action='store_true')
+
+    command_group.add_argument('--phasef',
+        help='Performs Phase-modifying filter.',
         action='store_true')
 
     # EDGECASES
