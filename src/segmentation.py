@@ -111,15 +111,19 @@ def region_growing(img, seeds, error):
         for x in range(width):
             for y in range(height):
                 region[x,y] = new_region[x,y] or region[x,y]
-    
-    dilated = dilation(region.copy(), get_sample_se('iii'))
-    eroded = erosion(region.copy(), get_sample_se('iii'))
-    for x in range(width):
-        for y in range(height):
-            region[x,y] = dilated[x,y] and not eroded[x,y]
+
+    # dilated = dilation(region.copy(), get_sample_se('iii'))
+    # eroded = erosion(region.copy(), get_sample_se('iii'))
+    # for x in range(width):
+    #     for y in range(height):
+    #         region[x,y] = dilated[x,y] and not eroded[x,y]
 
     for x in range(width):
         for y in range(height):
             if region[x,y] == True:
                 img[x,y] = 0
+
+    for s in seeds:
+        img[s[0], s[1]] = 255
+
     return img
