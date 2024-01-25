@@ -1,4 +1,5 @@
 from decimal import Decimal
+import numpy as np
 
 from elementary import *
 from geometric import *
@@ -10,6 +11,7 @@ from characteristics import *
 from morphology import *
 from segmentation import *
 from fourier import *
+from filters import *
 
 def handle_transformation(args, channel):
     if args.brightness:
@@ -93,30 +95,34 @@ def handle_transformation(args, channel):
         return inverse_discrete_fourier(channel)
 
     if args.fft:
-        return fast_fourier(channel)
+        fft_result = fft2d(channel)
+        magnitude = np.log(np.abs(fft_result) + 1)
+        return normalize_output(channel, magnitude)
 
     if args.ifft:
-        return inverse_fast_fourier(channel)
+        fft_result = ifft2d(channel)
+        magnitude = np.log(np.abs(fft_result) + 1)
+        return normalize_output(channel, magnitude)
 
     # filters
 
     if args.lowpassf:
-        return lowpass(channel)
+        return np.real(normalize_output(channel, ifft2d(lowpass(fft2d(channel)))))
     
     if args.highpassf:
-        return highpass(channel)
+        return np.real(normalize_output(channel, ifft2d(highpass(channel))))
     
     if args.bandpassf:
-        return bandpass(channel)
+        return np.real(normalize_output(channel, ifft2d(bandpass(channel))))
     
     if args.bandcutf:
-        return bandcut(channel)
+        return np.real(normalize_output(channel, ifft2d(bandcut(channel))))
     
     if args.edgehpf:
-        return highpassedge(channel)
+        return np.real(normalize_output(channel, ifft2d(highpassedge(channel))))
     
     if args.phasef:
-        return phasefilter(channel)
+        return np.real(normalize_output(channel, ifft2d(phasefilter(channel))))
 
     print('Error! Transformation not recognized!')
     exit(1)
