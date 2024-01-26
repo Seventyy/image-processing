@@ -110,19 +110,19 @@ def handle_transformation(args, channel):
         return np.real(normalize_output(channel, ifft2d(lowpass(fft2d(channel)))))
     
     if args.highpassf:
-        return np.real(normalize_output(channel, ifft2d(highpass(channel))))
+        return np.real(normalize_output(channel, ifft2d(highpass(fft2d(channel)))))
     
     if args.bandpassf:
-        return np.real(normalize_output(channel, ifft2d(bandpass(channel))))
+        return np.real(normalize_output(channel, ifft2d(bandpass(fft2d(channel)))))
     
     if args.bandcutf:
-        return np.real(normalize_output(channel, ifft2d(bandcut(channel))))
+        return np.real(normalize_output(channel, ifft2d(bandcut(fft2d(channel)))))
     
     if args.edgehpf:
-        return np.real(normalize_output(channel, ifft2d(highpassedge(channel))))
+        return np.real(normalize_output(channel, ifft2d(highpassedge(fft2d(channel)))))
     
     if args.phasef:
-        return np.real(normalize_output(channel, ifft2d(phasefilter(channel))))
+        return np.real(normalize_output(channel, ifft2d(phasefilter(fft2d(channel)))))
 
     print('Error! Transformation not recognized!')
     exit(1)
