@@ -1,11 +1,31 @@
 import numpy as np
 import math, cmath
 
-def discrete_fourier(img):
-    return img
+def dft(arr):
+    N = len(arr)
+    w = cmath.exp(-2j*np.pi/N)
 
-def inverse_discrete_fourier(img):
-    return img
+    result = []
+    for n in range(N):
+        val = 0
+        for k in range(N):
+            val += arr[k] * w**(n*k)
+        result.append(val)
+    
+    return result
+
+def idft(arr):
+    N = len(arr)
+    w = cmath.exp(2j*np.pi/N)
+
+    result = []
+    for n in range(N):
+        val = 0
+        for k in range(N):
+            val += arr[k] * w**(n*k)
+        result.append(val / N)
+    
+    return result
 
 def fft(arr):
     N = len(arr)
@@ -28,37 +48,63 @@ def fft(arr):
 
     return result
 
-def ifft(arr):
+def ifft_unnorm(arr):
     N = len(arr)
     
     if N <= 1:
         return arr
 
-    conj_exp_terms = [cmath.exp(2j * math.pi * k / N) for k in range(N)]
-    
-    even = ifft(arr[0::2])
-    odd = ifft(arr[1::2])
+    even = ifft_unnorm(arr[0::2])
+    odd = ifft_unnorm(arr[1::2])
+
+    T = []
+    for k in range(N // 2):
+        T.append(cmath.exp(2j * math.pi * k / N) * odd[k])
 
     result = []
     for k in range(N // 2):
-        result.append(even[k] + conj_exp_terms[k] * odd[k])
+        result.append(even[k] + T[k])
     for k in range(N // 2):
-        result.append(even[k] - conj_exp_terms[k] * odd[k])
-
+        result.append(even[k] - T[k])
+    
     return result
 
-def transpose(arr):
-    M = len(arr)
-    N = len(arr[0])
+def ifft(arr):
+    N = len(arr)
+    result = ifft_unnorm(arr)
+    return [elem / N for elem in result]
 
-    transposed = []
-    for i in range(N):
-        inner = []
-        for j in range(M):
-            inner.append(arr[j][i])
-        transposed.append(inner)
-    
-    return transposed
+def dft2d(img):
+    by_rows = []
+    rownum = 0
+    for row in img:
+        rownum += 1
+        by_rows.append(dft(row))
+
+    colnum = 0
+    by_cols = []
+    trows = np.transpose(by_rows)
+    for col in trows:
+        colnum += 1
+        by_cols.append(dft(col))
+
+    return np.array(np.transpose(by_cols), dtype=np.complex128)
+
+def idft2d(img):
+    by_rows = []
+    rownum = 0
+    for row in img:
+        rownum += 1
+        by_rows.append(idft(row))
+
+    colnum = 0
+    by_cols = []
+    trows = np.transpose(by_rows)
+    for col in trows:
+        colnum += 1
+        by_cols.append(idft(col))
+
+    return np.array(np.transpose(by_cols), dtype=np.complex128)
 
 def fft2d(img):
     by_rows = []
@@ -66,12 +112,11 @@ def fft2d(img):
         by_rows.append(fft(row))
 
     by_cols = []
-    for col in np.transpose(by_rows):
+    trows = np.transpose(by_rows)
+    for col in trows:
         by_cols.append(fft(col))
 
-    return np.array(transpose(by_cols), dtype=np.complex128)
-
-
+    return np.array(np.transpose(by_cols), dtype=np.complex128)
 
 def ifft2d(img):
     by_rows = []
@@ -82,15 +127,4 @@ def ifft2d(img):
     for col in np.transpose(by_rows):
         by_cols.append(ifft(col))
 
-    return np.array(transpose(by_cols), dtype=np.complex128)
-
-def normalize_output(org_image, result):
-    min_val = np.min(org_image)
-    max_val = np.max(org_image)
-    normalized = (np.abs(result) - np.min(result)) / (np.max(result) - np.min(result)) * (max_val - min_val) + min_val
-    return normalized
-
-def normalize_output_log():
-    magnitude_spectrum = np.log(np.abs(fft_result) + 1)
-    magnitude_spectrum_normalized = (magnitude_spectrum - np.min(magnitude_spectrum)) / (np.max(magnitude_spectrum) - np.min(magnitude_spectrum)) * 255
-    return magnitude_spectrum_normalized
+    return np.array(np.transpose(by_cols), dtype=np.complex128)

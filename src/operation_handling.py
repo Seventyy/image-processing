@@ -89,40 +89,41 @@ def handle_transformation(args, channel):
     # fourier
 
     if args.dft:
-        return discrete_fourier(channel)
+        result = dft2d(channel)
 
     if args.idft:
-        return inverse_discrete_fourier(channel)
+        result = idft2d(channel)
 
     if args.fft:
-        fft_result = fft2d(channel)
-        magnitude = np.log(np.abs(fft_result) + 1)
-        return normalize_output(channel, magnitude)
+        result = fft2d(channel)
 
     if args.ifft:
-        fft_result = ifft2d(channel)
-        magnitude = np.log(np.abs(fft_result) + 1)
-        return normalize_output(channel, magnitude)
+        result = ifft2d(channel)
+
+    if args.dft or args.idft or args.fft or args.ifft:
+        magnitude = np.log(np.abs(result) + 1)
+        normalized = (magnitude - np.min(magnitude)) / (np.max(magnitude) - np.min(magnitude)) * 255
+        return normalized
 
     # filters
 
     if args.lowpassf:
-        return np.real(normalize_output(channel, ifft2d(lowpass(fft2d(channel)))))
+        return np.abs(ifft2d(lowpass(fft2d(channel))))
     
     if args.highpassf:
-        return np.real(normalize_output(channel, ifft2d(highpass(fft2d(channel)))))
+        return np.abs(ifft2d(highpass(fft2d(channel))))
     
     if args.bandpassf:
-        return np.real(normalize_output(channel, ifft2d(bandpass(fft2d(channel)))))
+        return np.abs(ifft2d(bandpass(fft2d(channel))))
     
     if args.bandcutf:
-        return np.real(normalize_output(channel, ifft2d(bandcut(fft2d(channel)))))
+        return np.abs(ifft2d(bandcut(fft2d(channel))))
     
     if args.edgehpf:
-        return np.real(normalize_output(channel, ifft2d(highpassedge(fft2d(channel)))))
-    
+        return np.abs(ifft2d(highpassedge(fft2d(channel))))
+
     if args.phasef:
-        return np.real(normalize_output(channel, ifft2d(phasefilter(fft2d(channel)))))
+        return np.abs(ifft2d(phasefilter(fft2d(channel))))
 
     print('Error! Transformation not recognized!')
     exit(1)
