@@ -88,43 +88,49 @@ def handle_transformation(args, channel):
 
     # fourier
 
-    if args.dft:
-        result = dft2d(channel)
+    if True in [args.dft, args.idft, args.fft, args.ifft]:
 
-    if args.idft:
-        result = idft2d(channel)
+        if args.dft:
+            result = dft2d(channel)
+        if args.idft:
+            result = idft2d(channel)
+        if args.fft:
+            result = fft2d(channel)
+        if args.ifft:
+            result = ifft2d(channel)
 
-    if args.fft:
-        result = fft2d(channel)
-
-    if args.ifft:
-        result = ifft2d(channel)
-
-    if args.dft or args.idft or args.fft or args.ifft:
         magnitude = np.log(np.abs(result) + 1)
         normalized = (magnitude - np.min(magnitude)) / (np.max(magnitude) - np.min(magnitude)) * 255
         return normalized
 
     # filters
 
-    if args.lowpassf:
-        return np.abs(ifft2d(lowpass(fft2d(channel))))
-    
-    if args.highpassf:
-        return np.abs(ifft2d(highpass(fft2d(channel))))
-    
-    if args.bandpassf:
-        return np.abs(ifft2d(bandpass(fft2d(channel))))
-    
-    if args.bandcutf:
-        return np.abs(ifft2d(bandcut(fft2d(channel))))
-    
-    if args.edgehpf:
-        return np.abs(ifft2d(highpassedge(fft2d(channel))))
+    if True in [args.lowpassf, args.highpassf, args.bandpassf, args.bandcutf, args.edgehpf, args.phasef]:
+        
+        transform = fft2d(channel)
+        if args.bandpassf or args.bandcutf:
+            [r1, r2] = sorted([float(r.strip()) for r in args.radius.split(',')])
 
-    if args.phasef:
-        return np.abs(ifft2d(phasefilter(fft2d(channel))))
-
+        if args.lowpassf:
+            result = np.abs(ifft2d(lowpass(transform, float(args.radius))))
+        if args.highpassf:
+            result = np.abs(ifft2d(highpass(transform, float(args.radius))))
+        if args.bandpassf:
+            result = bandpass(transform, r1, r2)
+        if args.bandcutf:
+            result = bandcut(transform, r1, r2)
+        if args.edgehpf:
+            result = highpassedge(transform)
+        if args.phasef:
+            result = phasefilter(transform)
+        
+        if args.fourier:
+            magnitude = np.log(np.abs(result) + 1)
+            normalized = (magnitude - np.min(magnitude)) / (np.max(magnitude) - np.min(magnitude)) * 255
+            return normalized
+        else:
+            return np.abs(ifft2d(result))
+    
     print('Error! Transformation not recognized!')
     exit(1)
 

@@ -103,6 +103,9 @@ def parse_cli():
     parser.add_argument('-sd', '--seed', help='Coordinates of multiple seed pixels used in region growing, in the format \"uint,uint uint,uint ...\", i.e. \"--seed=\'0,5 80,120 50,20\'\"')
     parser.add_argument('-e', '--error', default=5, help='Absolute error used in region growing. Is equal to maximum intensity difference two pixels in one region can have. 5 by default.')
 
+    parser.add_argument('-r', '--radius', help='Radius used in lowpass, highpass and band filters. Band filters require two radiuses to be passed in the format \"float,float\".')
+    parser.add_argument('-f', '--fourier', action='store_true', help='Will make filters output the fourier transform instead of the finished picture.')
+
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True
 
@@ -348,5 +351,8 @@ def parse_cli():
 
     if args.region_growing and not args.seed:
         parser.error('-sd/--seed argument is required for current command!')
+
+    if True in [args.lowpassf, args.highpassf] and not args.radius:
+        parser.error('-r/--radius argument is required for current command!')
 
     return args
