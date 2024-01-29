@@ -103,6 +103,9 @@ def parse_cli():
 
     parser.add_argument('-r', '--radius', help='Radius used in lowpass, highpass and band filters. Band filters require two radiuses to be passed in the format \"float,float\".')
     parser.add_argument('-f', '--fourier', action='store_true', help='Will make filters output the fourier transform instead of the finished picture.')
+    parser.add_argument('-A', '--angle', help='Angle value used in --edgehpf.')
+    parser.add_argument('-K', '--K', help='K value used in --phasef')
+    parser.add_argument('-L', '--L', help='L value used in --phasef')
 
     command_group = parser.add_argument_group('commands').add_mutually_exclusive_group()
     command_group.required = True

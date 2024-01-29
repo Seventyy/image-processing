@@ -111,9 +111,9 @@ def handle_transformation(args, channel):
         if args.bandcutf:
             result = bandcut(transform, r1, r2)
         if args.edgehpf:
-            result = highpassedge(transform)
+            result = highpassedge(transform, float(args.radius), float(args.angle))
         if args.phasef:
-            result = phasefilter(transform)
+            result = phasefilter(transform, float(args.K), float(args.L))
         
         if args.fourier:
             return result
