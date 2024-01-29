@@ -112,9 +112,9 @@ def handle_transformation(args, channel):
             [r1, r2] = sorted([float(r.strip()) for r in args.radius.split(',')])
 
         if args.lowpassf:
-            result = np.abs(ifft2d(lowpass(transform, float(args.radius))))
+            result = lowpass(transform, float(args.radius))
         if args.highpassf:
-            result = np.abs(ifft2d(highpass(transform, float(args.radius))))
+            result = highpass(transform, float(args.radius))
         if args.bandpassf:
             result = bandpass(transform, r1, r2)
         if args.bandcutf:
