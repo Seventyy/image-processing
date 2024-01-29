@@ -6,7 +6,7 @@ def lowpass(img, radius):
     for x in range(N):
         for y in range(M):
             dist2 = (x - N // 2)**2 + (y - M // 2)**2
-            if dist2 < radius**2:
+            if dist2 > radius**2:
                 img[x,y] = 0
 
     return img
@@ -17,7 +17,7 @@ def highpass(img, radius):
     for x in range(N):
         for y in range(M):
             dist2 = (x - N // 2)**2 + (y - M // 2)**2
-            if dist2 > radius**2:
+            if dist2 < radius**2:
                 img[x,y] = 0
                 
     return img

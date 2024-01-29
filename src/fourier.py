@@ -74,6 +74,17 @@ def ifft(arr):
     result = ifft_unnorm(arr)
     return [elem / N for elem in result]
 
+def rearange(img):
+    [H, W] = [elem // 2 for elem in img.shape]
+    copy = img.copy()
+    
+    img[H:,W:] = copy[:H,:W]
+    img[:H,W:] = copy[H:,:W]
+    img[H:,:W] = copy[:H,W:]
+    img[:H,:W] = copy[H:,W:]
+
+    return img
+
 def dft2d(img):
     by_rows = []
     rownum = 0
@@ -88,7 +99,7 @@ def dft2d(img):
         colnum += 1
         by_cols.append(dft(col))
 
-    return np.array(np.transpose(by_cols), dtype=np.complex128)
+    return rearange(np.array(np.transpose(by_cols), dtype=np.complex128))
 
 def idft2d(img):
     by_rows = []
@@ -116,7 +127,7 @@ def fft2d(img):
     for col in trows:
         by_cols.append(fft(col))
 
-    return np.array(np.transpose(by_cols), dtype=np.complex128)
+    return rearange(np.array(np.transpose(by_cols), dtype=np.complex128))
 
 def ifft2d(img):
     by_rows = []
