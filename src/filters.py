@@ -1,5 +1,6 @@
 import numpy as np
 import cmath
+import math
 
 def lowpass(img, radius):
     [N, M] = img.shape
@@ -48,50 +49,45 @@ def bandcut(img, r1, r2):
 def highpassedge(img, radius, angle):
     [N, M] = img.shape
 
-    for x in range(N):
-        for y in range(M):
-            dist2 = (x - N // 2)**2 + (y - M // 2)**2
-            if dist2 < radius**2:
-                img[x,y] = 0
-    
-    for x in range(N):
-        for y in range(M):
-            dist2 = (x - N // 2)**2 + (y - M // 2)**2
-            if dist2 < radius**2:
-                img[x,y] = 0
-    
-
-
-    
     band_width = 15
-    
-    # Calculate the bounds for the band
-    band_left = int((N - band_width) / 2)
-    band_right = int((N + band_width) / 2)
-    
-    # Iterate over each pixel in the image
+
     for x in range(N):
         for y in range(M):
-            # Check if the pixel is within the band bounds
-            if band_left <= x < band_right:
-                # Calculate the new position based on the rotation
-                new_x = int((x - N / 2) * cmath.cos(angle) - (y - M / 2) * cmath.sin(angle) + N / 2)
-                new_y = int((x - N / 2) * cmath.sin(angle) + (y - M / 2) * cmath.cos(angle) + M / 2)
-                
-                # Check if the new position is within the image bounds
-                if 0 <= new_x < N and 0 <= new_y < M:
-                    img[x,y] = 0
-
-
-
-
-
+            dist2 = (x - N // 2)**2 + (y - M // 2)**2
+            if dist2 < radius**2:
+                img[x,y] = 0
+    
+    for x in range(N):
+        for y in range(M):
+            r, theta = cartesian_to_polar(x-256, y-256)
+            mirror_theta = (theta + 180) % 360
+            if not(theta > angle - band_width/2 and theta < angle + band_width/2) and\
+                not(mirror_theta > angle - band_width/2 and mirror_theta < angle + band_width/2):
+                img[y, x] = 0
 
     return img
-    
+
+def cartesian_to_polar(x, y):
+    r = math.sqrt(x**2 + y**2)
+    theta = math.atan2(y, x)
+
+    theta_degrees = math.degrees(theta)
+    theta_degrees = (theta_degrees + 360) % 360
+
+    return r, theta_degrees
 
 def phasefilter(img, k, l):
+    [N, M] = img.shape
 
-    cmath.exp(j * ((-n*k*2*PI)/512 + (-m*l*2*PI)/512 + (k+l)*PI))
+    mask = np.full((N, M), 1 + 1j)
 
+    for n in range(N):
+        for m in range(M):
+            mask[n, m] = cmath.exp( 1j * ((-n*k*2*math.pi)/N + (-m*l*2*math.pi)/M + (k+l)*math.pi))
+    
+    for x in range(N):
+        for y in range(M):
+            # print(img[x, y] * mask[x, y])
+            img[x, y] = img[x, y] * mask[x, y]
+    
     return img
