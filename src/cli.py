@@ -31,9 +31,7 @@ def is_operation_transformation(args):
         args.m3,
 
         args.dft,
-        args.idft,
         args.fft,
-        args.ifft,
 
         args.lowpassf,
         args.highpassf,
@@ -279,16 +277,8 @@ def parse_cli():
         help='Performs Discrete Fourier Transform.',
         action='store_true')
 
-    command_group.add_argument('--idft',
-        help='Performs Inverse Discrete Fourier Transform.',
-        action='store_true')
-
     command_group.add_argument('--fft',
         help='Performs Fast Fourier Transform with decimation in frequency domain.',
-        action='store_true')
-
-    command_group.add_argument('--ifft',
-        help='Performs Inverse Fast Fourier Transform with decimation in frequency domain.',
         action='store_true')
 
     # FILTERS

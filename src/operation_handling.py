@@ -91,14 +91,8 @@ def handle_transformation(args, channel):
     if args.dft:
         return dft2d(channel)
     
-    if args.idft:
-        return idft2d(channel)
-    
     if args.fft:
         return fft2d(channel)
-    
-    if args.ifft:
-        return ifft2d(channel)
 
     # filters
 
