@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+from matplotlib.colors import LinearSegmentedColormap
 
 sys.path.insert(0, f'./src')
 from cli import *
@@ -62,6 +63,7 @@ def main():
             minv = np.min(data)
             if (minv == 0.0):
                 minv = 1.0
+            data[data < minv] = minv
 
             cmap = plt.cm.inferno
             norm = LogNorm(vmin=minv, vmax=np.max(data))
