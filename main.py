@@ -4,6 +4,8 @@ import time
 
 from PIL import Image
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 
 sys.path.insert(0, f'./src')
 from cli import *
@@ -47,6 +49,21 @@ def main():
         else:
             pixels_new = handle_transformation(args, pixels_new)
 
+        # fourier has to be shown on plt
+        if True in [args.fourier, args.fft, args.dft]:
+            if len(pixels_new.shape) == 3:
+                data = (pixels_new[:,:,0] + pixels_new[:,:,1] + pixels_new[:,:,2]) / 3
+            else:
+                data = pixels_new
+
+            plt.figure(figsize=(10, 6))
+            plt.imshow(np.abs(data), cmap='inferno', norm=LogNorm(vmin=1))
+            plt.colorbar()
+            plt.title('Magnitude of 2D Fourier Transform')
+            plt.xlabel('Frequency (kx)')
+            plt.ylabel('Frequency (ky)')
+            plt.show()
+
     if is_operation_comparison(args):
         handle_comparison(args, pixels_old, pixels_compare)
 
@@ -88,6 +105,8 @@ def main():
         tracemalloc.stop()
     
     if is_operation_transformation(args) or args.histogram:
+        if True in [args.fourier, args.fft, args.dft]:
+            return
         Image.fromarray(pixels_new.astype(target_type)).save(args.output)
 
 if __name__ == "__main__":

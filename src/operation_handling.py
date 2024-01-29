@@ -88,20 +88,17 @@ def handle_transformation(args, channel):
 
     # fourier
 
-    if True in [args.dft, args.idft, args.fft, args.ifft]:
-
-        if args.dft:
-            result = dft2d(channel)
-        if args.idft:
-            result = idft2d(channel)
-        if args.fft:
-            result = fft2d(channel)
-        if args.ifft:
-            result = ifft2d(channel)
-
-        magnitude = np.log(np.abs(result) + 1)
-        normalized = (magnitude - np.min(magnitude)) / (np.max(magnitude) - np.min(magnitude)) * 255
-        return normalized
+    if args.dft:
+        return dft2d(channel)
+    
+    if args.idft:
+        return idft2d(channel)
+    
+    if args.fft:
+        return fft2d(channel)
+    
+    if args.ifft:
+        return ifft2d(channel)
 
     # filters
 
@@ -125,9 +122,7 @@ def handle_transformation(args, channel):
             result = phasefilter(transform)
         
         if args.fourier:
-            magnitude = np.log(np.abs(result) + 1)
-            normalized = (magnitude - np.min(magnitude)) / (np.max(magnitude) - np.min(magnitude)) * 255
-            return normalized
+            return result
         else:
             return np.abs(ifft2d(result))
     
