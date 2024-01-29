@@ -352,7 +352,7 @@ def parse_cli():
     if args.region_growing and not args.seed:
         parser.error('-sd/--seed argument is required for current command!')
 
-    if True in [args.lowpassf, args.highpassf] and not args.radius:
+    if True in [args.lowpassf, args.highpassf, args.bandpassf, args.bandcutf] and not args.radius:
         parser.error('-r/--radius argument is required for current command!')
 
     return args
