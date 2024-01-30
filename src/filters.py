@@ -50,19 +50,14 @@ def highpassedge(img, radius, angle):
     [N, M] = img.shape
 
     band_width = 15
-
-    for x in range(N):
-        for y in range(M):
-            dist2 = (x - N // 2)**2 + (y - M // 2)**2
-            if dist2 < radius**2:
-                img[x,y] = 0
     
     for x in range(N):
         for y in range(M):
             r, theta = cartesian_to_polar(x-256, y-256)
             mirror_theta = (theta + 180) % 360
-            if not(theta > angle - band_width/2 and theta < angle + band_width/2) and\
-                not(mirror_theta > angle - band_width/2 and mirror_theta < angle + band_width/2):
+            if (not(theta > angle - band_width/2 and theta < angle + band_width/2) and\
+                not(mirror_theta > angle - band_width/2 and mirror_theta < angle + band_width/2)) or\
+                r < radius:
                 img[y, x] = 0
 
     return img
